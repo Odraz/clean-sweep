@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://dfi02hgcspv5o"]
+
+[ext_resource type="Texture2D" uid="uid://b8vo4rqlluqmh" path="res://icon.svg" id="1_1u0vn"]
+[ext_resource type="Script" path="res://mob.gd" id="1_85dvw"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7j23f"]
+light_mode = 2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4stuc"]
+size = Vector2(30, 30)
+
+[node name="Mob" type="CharacterBody2D"]
+script = ExtResource("1_85dvw")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_7j23f")
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_1u0vn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_4stuc")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+neighbor_distance = 100.0
+max_neighbors = 1
+debug_enabled = true
+
+[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]

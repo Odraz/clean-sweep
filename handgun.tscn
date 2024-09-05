@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://8heg8ep15o5d"]
+
+[ext_resource type="Script" path="res://handgun.gd" id="1_xymik"]
+
+[node name="Handgun" type="Node"]
+script = ExtResource("1_xymik")

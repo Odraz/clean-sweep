@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://1gwie50uy6qw"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_gkpn8"]
+
+[sub_resource type="Gradient" id="Gradient_el3jo"]
+offsets = PackedFloat32Array(0, 0.213333, 0.793333, 1)
+colors = PackedColorArray(0.85, 0.694875, 0.2295, 0, 0.85, 0.467358, 0.2295, 1, 0.88, 0.7559, 0.3836, 1, 1, 1, 1, 1)
+
+[node name="Bullet" type="Node"]
+script = ExtResource("1_gkpn8")
+smoke_fade_out_speed = null
+
+[node name="Fire" type="Line2D" parent="."]
+points = PackedVector2Array(73, 18, 174.048, 18)
+width = 2.0
+gradient = SubResource("Gradient_el3jo")
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="Smoke" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(73, 18, 174, 18)
+width = 2.0
+default_color = Color(0.34, 0.34, 0.34, 1)
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="FireTimer" type="Timer" parent="."]
+wait_time = 0.075
+one_shot = true
+autostart = true
+
+[node name="SmokeTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="FireTimer" to="." method="_on_fire_timer_timeout"]
+[connection signal="timeout" from="SmokeTimer" to="." method="_on_smoke_timer_timeout"]

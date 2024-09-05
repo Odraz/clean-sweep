@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=3 uid="uid://cockkd0011ati"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_svbte"]
+[ext_resource type="Texture2D" uid="uid://g5qp4jkpdw57" path="res://art/player_idle1.png" id="2_3wxq2"]
+[ext_resource type="Texture2D" uid="uid://br7wjryslpq1d" path="res://art/player_run1.png" id="3_5u72j"]
+[ext_resource type="Texture2D" uid="uid://bgo8yi7jkx24l" path="res://art/player_run2.png" id="4_hi2vr"]
+[ext_resource type="Texture2D" uid="uid://c3vn877pwqbcg" path="res://art/2d_lights_and_shadows_neutral_point_light.webp" id="5_tuqut"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_erwmi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_3wxq2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5u72j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_hi2vr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_5u72j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_hi2vr")
+}],
+"loop": true,
+"name": &"move",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mtobe"]
+height = 36.0
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_pnjyr"]
+polygon = PackedVector2Array(14, -41, -4, -38, -17.3333, -30, -28, -18, -31.3333, -9.33333, -32.6667, 0, -30.6667, 10, -26, 20, -15.3333, 31.3333, -2, 38, 16, 42, -38.6667, 34, -37.3333, -36.6667)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_svbte")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+light_mask = 512
+rotation = 1.5708
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_erwmi")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_mtobe")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+rotation = 1.5708
+energy = 0.5
+shadow_enabled = true
+shadow_item_cull_mask = 513
+texture = ExtResource("5_tuqut")
+texture_scale = 10.0
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+scale = Vector2(1.5, 1.5)
+occluder = SubResource("OccluderPolygon2D_pnjyr")
+occluder_light_mask = 512
+
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
+radius = 10.0
