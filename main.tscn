@@ -469,3 +469,4 @@ position = Vector2(72, 472)
 position = Vector2(648, 472)
 
 [connection signal="hit" from="Player" to="Mob" method="_on_player_hit"]
+[connection signal="hit" from="Mob" to="Player" method="_on_mob_hit"]

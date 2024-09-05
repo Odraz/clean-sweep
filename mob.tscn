@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dfi02hgcspv5o"]
+[gd_scene load_steps=6 format=3 uid="uid://dfi02hgcspv5o"]
 
 [ext_resource type="Texture2D" uid="uid://b8vo4rqlluqmh" path="res://icon.svg" id="1_1u0vn"]
 [ext_resource type="Script" path="res://mob.gd" id="1_85dvw"]
+[ext_resource type="PackedScene" uid="uid://8heg8ep15o5d" path="res://handgun.tscn" id="3_kwxxi"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7j23f"]
 light_mode = 2
@@ -28,4 +29,11 @@ neighbor_distance = 100.0
 max_neighbors = 1
 debug_enabled = true
 
+[node name="Handgun" parent="." instance=ExtResource("3_kwxxi")]
+
+[node name="TriggerTimer" type="Timer" parent="."]
+wait_time = 0.4
+
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="hit" from="Handgun" to="." method="_on_handgun_hit"]
+[connection signal="timeout" from="TriggerTimer" to="." method="_on_trigger_timer_timeout"]

@@ -2,6 +2,8 @@ extends CharacterBody2D
 
 enum State { patrolling, watching, chasing }
 
+signal hit(collider: CollisionObject2D)
+
 @export var movement_speed: float = 200.0
 
 @export var movement_target_positions: Array[Marker2D] = []
@@ -39,6 +41,9 @@ func _physics_process(_delta):
 	if is_player_in_light_of_sight():
 		rotation = global_position.direction_to(player.global_position).angle()
 
+		if state == State.patrolling or state == State.chasing:		
+			$TriggerTimer.start()
+
 		state = State.watching
 
 		return
@@ -48,6 +53,8 @@ func _physics_process(_delta):
 		state = State.chasing
 	else:
 		state = State.patrolling
+
+	$TriggerTimer.stop()
 
 	if navigation_agent.is_navigation_finished():
 		current_movement_target_index += 1
@@ -83,12 +90,17 @@ func is_player_in_light_of_sight() -> bool:
 
 	return result.collider == player
 
-func _on_player_hit(collider:CollisionObject2D) -> void:
-	if collider == self:
-		queue_free()
-
-
-func _on_navigation_agent_2d_velocity_computed(safe_velocity:Vector2) -> void:
+func _on_navigation_agent_2d_velocity_computed(safe_velocity:Vector2):
 	velocity = safe_velocity * movement_speed
 
 	move_and_slide()
+
+func _on_trigger_timer_timeout():
+	$Handgun.shoot(global_position, player.global_position, 500, 0)
+
+func _on_handgun_hit(collider: CollisionObject2D):
+	hit.emit(collider)
+
+func _on_player_hit(collider:CollisionObject2D):
+	if collider == self:
+		queue_free()
