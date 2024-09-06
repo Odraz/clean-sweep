@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 enum State { patrolling, watching, chasing }
 
-signal hit(collider: CollisionObject2D)
+signal hit(collider: Object)
 
 @export var movement_speed: float = 200.0
 
@@ -57,10 +57,7 @@ func _physics_process(_delta):
 	$TriggerTimer.stop()
 
 	if navigation_agent.is_navigation_finished():
-		current_movement_target_index += 1
-		
-		if current_movement_target_index >= movement_target_positions.size():
-			current_movement_target_index = 0
+		set_waypoint_randomly()
 
 		set_movement_target(movement_target_positions[current_movement_target_index].global_position)
 
@@ -73,6 +70,22 @@ func _physics_process(_delta):
 		rotation = velocity.angle()
 
 	_on_navigation_agent_2d_velocity_computed(velocity)
+
+func set_waypoint_randomly():
+	var random_index = randi() % movement_target_positions.size()
+
+	if random_index == current_movement_target_index:
+		current_movement_target_index = (random_index + 1) % movement_target_positions.size()
+	else:
+		current_movement_target_index = random_index
+
+func set_waypoint_iteratively():
+	current_movement_target_index += 1
+		
+	print("Not calling set_waypoint_iteratively")
+
+	if current_movement_target_index >= movement_target_positions.size():
+		current_movement_target_index = 0
 
 func is_player_in_light_of_sight() -> bool:
 	var direction_to_player = position.direction_to(player.position)
@@ -96,11 +109,11 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity:Vector2):
 	move_and_slide()
 
 func _on_trigger_timer_timeout():
-	$Handgun.shoot(global_position, player.global_position, 500, 0)
+	$Handgun.shoot(global_position, player.global_position, 500, PI / 16)
 
-func _on_handgun_hit(collider: CollisionObject2D):
+func _on_handgun_hit(collider: Object):
 	hit.emit(collider)
 
-func _on_player_hit(collider:CollisionObject2D):
+func _on_player_hit(collider: Object):
 	if collider == self:
 		queue_free()

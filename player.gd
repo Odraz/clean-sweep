@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-signal hit(collider: CollisionObject2D)
+signal hit(collider: Object)
 
 @export var speed_walk: float = 150
 @export var speed_run: float = 300
@@ -14,7 +14,7 @@ func _physics_process(delta):
 	move_player(delta)
 
 	if Input.is_action_just_pressed("shoot_gun"):
-		$Handgun.shoot(position, get_global_mouse_position(), 500, 0)
+		$Handgun.shoot(position, get_global_mouse_position(), 500, PI / 32)
 
 func move_player(_delta: float):
 	var _velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -32,9 +32,9 @@ func move_player(_delta: float):
 	else:
 		$AnimatedSprite2D.play("idle")
 		
-func _on_handgun_hit(collider:CollisionObject2D):
+func _on_handgun_hit(collider: Object):
 	hit.emit(collider)
 
-func _on_mob_hit(collider:CollisionObject2D) -> void:
+func _on_mob_hit(collider: Object) -> void:
 	if collider == self:
 		hide()
