@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 signal hit(collider: Object)
+signal player_died()
 
 @export var speed_walk: float = 150
 @export var speed_run: float = 300
@@ -37,4 +38,4 @@ func _on_handgun_hit(collider: Object):
 
 func _on_mob_hit(collider: Object) -> void:
 	if collider == self:
-		hide()
+		player_died.emit()
