@@ -109,7 +109,7 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity:Vector2):
 	move_and_slide()
 
 func _on_trigger_timer_timeout():
-	$Handgun.shoot(global_position, player.global_position, 500, PI / 16)
+	$Handgun.shoot(global_position, player.global_position, 500, PI / 12)
 
 func _on_handgun_hit(collider: Object):
 	hit.emit(collider)

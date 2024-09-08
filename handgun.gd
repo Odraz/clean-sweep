@@ -27,6 +27,9 @@ func shoot(start_position: Vector2, direction: Vector2, gun_range: float, disper
 
 	spawn_bullet(result, start_position, direction)
 
+	# Play the fire sound
+	$AudioFire.play()
+
 func spawn_bullet(result: Dictionary, start_position: Vector2, direction: Vector2):
 	var bullet_scene = load("res://bullet.tscn")
 	var bullet = bullet_scene.instantiate()
