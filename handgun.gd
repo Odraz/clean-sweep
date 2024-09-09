@@ -9,9 +9,6 @@ func shoot(start_position: Vector2, direction: Vector2, gun_range: float, disper
 
 	end_position = get_shoot_ray_end_position(start_position, direction, gun_range)
 
-	# Add dispersion to the direction. We want to simulate the bullet not going accurately to the direction but with some angular deviation.
-	# The dispersion is a value between 0 and 1. The higher the value, the more the bullet will deviate from the direction.
-	# Rotate the end_position around the start_position by a random angle.
 	var angle = randf_range(-dispersion / 2, dispersion / 2)
 
 	var diff = end_position - start_position
@@ -27,7 +24,6 @@ func shoot(start_position: Vector2, direction: Vector2, gun_range: float, disper
 
 	spawn_bullet(result, start_position, direction)
 
-	# Play the fire sound
 	$AudioFire.play()
 
 func spawn_bullet(result: Dictionary, start_position: Vector2, direction: Vector2):

@@ -79,14 +79,6 @@ func set_waypoint_randomly():
 	else:
 		current_movement_target_index = random_index
 
-func set_waypoint_iteratively():
-	current_movement_target_index += 1
-		
-	print("Not calling set_waypoint_iteratively")
-
-	if current_movement_target_index >= movement_target_positions.size():
-		current_movement_target_index = 0
-
 func is_player_in_light_of_sight() -> bool:
 	var direction_to_player = position.direction_to(player.position)
 	var front_facing_vector = transform.x.normalized()

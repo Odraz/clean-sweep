@@ -19,7 +19,10 @@ func _on_main_menu_quit_game():
 
 func show_main_menu():
 	current_level.queue_free()
+	
 	$MainMenu.show()
 
 func quit():
+	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+
 	get_tree().quit()
