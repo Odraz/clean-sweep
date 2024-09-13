@@ -479,7 +479,7 @@ speed_run = 200.0
 [node name="Mob" parent="." node_paths=PackedStringArray("movement_target_positions") instance=ExtResource("4_71p88")]
 position = Vector2(688, 288)
 movement_speed = 150.0
-movement_target_positions = [NodePath("../Waypoints/Marker2D4"), NodePath("../Waypoints/Marker2D"), NodePath("../Waypoints/Marker2D2"), NodePath("../Waypoints/Marker2D3")]
+movement_target_positions = [NodePath("../Waypoints/Marker2D"), NodePath("../Waypoints/Marker2D2"), NodePath("../Waypoints/Marker2D3"), NodePath("../Waypoints/Marker2D4")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(368, 280)

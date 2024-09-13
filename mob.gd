@@ -46,6 +46,9 @@ func _physics_process(_delta):
 
 		state = State.watching
 
+		$AnimatedSprite2D.play("idle")
+
+		# It would be cleaner to set the velocity to zero here, instead of returning.
 		return
 	elif state == State.watching:
 		set_movement_target(player.global_position)
@@ -68,6 +71,8 @@ func _physics_process(_delta):
 	# Face the direction of the next path position.
 	if velocity.length_squared() > 0:
 		rotation = velocity.angle()
+
+		$AnimatedSprite2D.play("move")
 
 	_on_navigation_agent_2d_velocity_computed(velocity)
 

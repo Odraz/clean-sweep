@@ -30,7 +30,7 @@ func spawn_bullet(result: Dictionary, start_position: Vector2, direction: Vector
 	var bullet_scene = load("res://bullet.tscn")
 	var bullet = bullet_scene.instantiate()
 
-	var bullet_start_position = start_position + (direction - start_position).normalized() * 20
+	var bullet_start_position = start_position + (direction - start_position).normalized() * 30
 	var bullet_end_position = result.position if result else end_position
 
 	bullet.init(bullet_start_position, bullet_end_position)

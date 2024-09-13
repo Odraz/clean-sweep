@@ -28,14 +28,29 @@ func move_player(_delta: float):
 
 	look_at(get_global_mouse_position())
 
+	if is_running:
+		$Audio/AudioFootsteps.pitch_scale = 1
+	else:
+		$Audio/AudioFootsteps.pitch_scale = 0.8
+
 	if velocity.length() > 0:
 		$AnimatedSprite2D.play("move")
+
+		if not $Audio/AudioFootsteps.is_playing():
+			$Audio/AudioFootsteps.play()
 	else:
 		$AnimatedSprite2D.play("idle")
+		$Audio/AudioFootsteps.stop()
 		
 func _on_handgun_hit(collider: Object):
 	hit.emit(collider)
 
 func _on_mob_hit(collider: Object) -> void:
 	if collider == self:
-		player_died.emit()
+		hide()
+		position = Vector2(0, 0)
+		$Audio/AudioDeath.play()
+		$DeathTimer.start()
+
+func _on_death_timer_timeout() -> void:
+	player_died.emit()
