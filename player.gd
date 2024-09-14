@@ -16,6 +16,7 @@ func _physics_process(delta):
 
 	if Input.is_action_just_pressed("shoot_gun"):
 		$Handgun.shoot(position, get_global_mouse_position(), 500, PI / 32)
+		$Crosshair.fire(1)
 
 func move_player(_delta: float):
 	var _velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")

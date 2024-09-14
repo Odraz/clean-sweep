@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cockkd0011ati"]
+[gd_scene load_steps=14 format=3 uid="uid://cockkd0011ati"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_svbte"]
 [ext_resource type="Texture2D" uid="uid://c73a2n2k2nq4j" path="res://art/player_idle_handgun.png" id="2_7rnls"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://c3vn877pwqbcg" path="res://art/2d_lights_and_shadows_neutral_point_light.webp" id="5_tuqut"]
 [ext_resource type="PackedScene" uid="uid://8heg8ep15o5d" path="res://handgun.tscn" id="6_n2gmc"]
 [ext_resource type="AudioStream" uid="uid://5754yqas4nxc" path="res://art/player_footstep.wav" id="7_cg8of"]
+[ext_resource type="PackedScene" uid="uid://cpgffmrxk8qoh" path="res://crosshair.tscn" id="8_37ybf"]
 [ext_resource type="AudioStream" uid="uid://bpqi3xio2xntf" path="res://art/player_death.wav" id="8_lt0s3"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_erwmi"]
@@ -75,6 +76,8 @@ occluder_light_mask = 512
 radius = 10.0
 
 [node name="Handgun" parent="." instance=ExtResource("6_n2gmc")]
+
+[node name="Crosshair" parent="." instance=ExtResource("8_37ybf")]
 
 [node name="DeathTimer" type="Timer" parent="."]
 wait_time = 2.0
