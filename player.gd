@@ -15,7 +15,7 @@ func _physics_process(delta):
 	move_player(delta)
 
 	if Input.is_action_just_pressed("shoot_gun"):
-		$Handgun.shoot(position, get_global_mouse_position(), 500, PI / 32)
+		$Handgun.shoot(position, get_global_mouse_position(), 500, PI / 22)
 		$Crosshair.fire(1)
 
 func move_player(_delta: float):
