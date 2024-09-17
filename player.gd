@@ -51,12 +51,13 @@ func move(_delta: float):
 
 	if velocity.length() > 0:
 		$AnimatedSprite2D.play("move")
-		
+		$Crosshair.stop_fire()
+
 		if not $Audio/AudioFootsteps.is_playing():
 			$Audio/AudioFootsteps.play()
 
 		if is_running:
-			$Crosshair.pos_x = 80
+			$Crosshair.pos_x = 75
 		else:
 			$Crosshair.pos_x = 40
 	else:

@@ -11,11 +11,8 @@ func _process(delta: float):
 	global_position = get_global_mouse_position()
 	global_rotation = 0
 
-	print("process, pos_x: ", pos_x)
 	for pivot in get_children():
 		pivot.get_node("Line2D").position.x = lerp(pivot.get_node("Line2D").position.x, pos_x, delta * 12)
-
-		print("pivot.get_node(Line2D).position.x: ", pivot.get_node("Line2D").position.x)
 
 
 func _exit_tree():
@@ -23,7 +20,6 @@ func _exit_tree():
 
 
 func fire(speed):
-	print("fire, pos_x: ", pos_x)
 	for pivot in get_children():
 		pivot.get_node("Line2D").get_node("AnimationPlayer").speed_scale = speed
 		pivot.get_node("Line2D").get_node("AnimationPlayer").stop()
@@ -31,6 +27,6 @@ func fire(speed):
 
 
 func stop_fire():
-	print("stop_fire, pos_x: ", pos_x)
 	for pivot in get_children():
-		pivot.get_node("Line2D").get_node("AnimationPlayer").stop()
+		if pivot.get_node("Line2D").get_node("AnimationPlayer").is_playing():
+			pivot.get_node("Line2D").get_node("AnimationPlayer").stop()
