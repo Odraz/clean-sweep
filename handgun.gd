@@ -1,6 +1,6 @@
 extends Node2D
 
-signal hit (collider: Object)
+signal hit(collider: Object)
 
 var end_position: Vector2
 
@@ -26,6 +26,7 @@ func shoot(start_position: Vector2, direction: Vector2, gun_range: float, disper
 
 	$AudioFire.play()
 
+
 func spawn_bullet(result: Dictionary, start_position: Vector2, direction: Vector2):
 	var bullet_scene = load("res://bullet.tscn")
 	var bullet = bullet_scene.instantiate()
@@ -37,5 +38,7 @@ func spawn_bullet(result: Dictionary, start_position: Vector2, direction: Vector
 
 	add_child(bullet)
 
+
 func get_shoot_ray_end_position(start_position: Vector2, direction: Vector2, gun_range: float) -> Vector2:
 	return start_position + (direction - start_position).normalized() * gun_range
+	

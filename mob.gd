@@ -1,19 +1,18 @@
 extends CharacterBody2D
 
-enum State { patrolling, watching, chasing }
-
 signal hit(collider: Object)
 
+enum State { patrolling, watching, chasing }
+
 @export var movement_speed: float = 200.0
-
 @export var movement_target_positions: Array[Marker2D] = []
-
-@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
-@onready var player: Node2D = get_parent().get_node("Player")
 
 var current_movement_target_index: int = 0
 
 var state: State = State.patrolling
+
+@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+@onready var player: Node2D = get_parent().get_node("Player")
 
 func _ready():
 	# These values need to be adjusted for the actor's speed
@@ -26,6 +25,7 @@ func _ready():
 	# Make sure to not await during _ready.
 	call_deferred("actor_setup")
 
+
 func actor_setup():
 	# Wait for the first physics frame so the NavigationServer can sync.
 	await get_tree().physics_frame
@@ -34,8 +34,10 @@ func actor_setup():
 	# Now that the navigation map is no longer empty, set the movement target.
 	set_movement_target(movement_target_positions[current_movement_target_index].global_position)
 
+
 func set_movement_target(movement_target: Vector2):
 	navigation_agent.target_position = movement_target
+
 
 func _physics_process(_delta):
 	if is_player_in_light_of_sight():
@@ -76,6 +78,7 @@ func _physics_process(_delta):
 
 	_on_navigation_agent_2d_velocity_computed(velocity)
 
+
 func set_waypoint_randomly():
 	var random_index = randi() % movement_target_positions.size()
 
@@ -83,6 +86,7 @@ func set_waypoint_randomly():
 		current_movement_target_index = (random_index + 1) % movement_target_positions.size()
 	else:
 		current_movement_target_index = random_index
+
 
 func is_player_in_light_of_sight() -> bool:
 	var direction_to_player = position.direction_to(player.position)
@@ -100,16 +104,20 @@ func is_player_in_light_of_sight() -> bool:
 
 	return result.collider == player
 
+
 func _on_navigation_agent_2d_velocity_computed(safe_velocity:Vector2):
 	velocity = safe_velocity * movement_speed
 
 	move_and_slide()
 
+
 func _on_trigger_timer_timeout():
 	$Handgun.shoot(global_position, player.global_position, 500, PI / 12)
 
+
 func _on_handgun_hit(collider: Object):
 	hit.emit(collider)
+
 
 func _on_player_hit(collider: Object):
 	if collider == self:
