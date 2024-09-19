@@ -474,7 +474,6 @@ color = Color(0.8, 0.8, 0.8, 1)
 
 [node name="Player" parent="." instance=ExtResource("3_gu3t4")]
 position = Vector2(16, 288)
-speed_run = 200.0
 
 [node name="Mob" parent="." node_paths=PackedStringArray("movement_target_positions") instance=ExtResource("4_71p88")]
 position = Vector2(688, 288)

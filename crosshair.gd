@@ -1,13 +1,14 @@
 extends Node2D
 
-var pos_x: float = 15
+const CURSOR_DEFAULT_POS_X = 10
+
+var pos_x: float = CURSOR_DEFAULT_POS_X
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 
 func _process(delta: float):
-
 	global_position = get_global_mouse_position()
 	global_rotation = 0
 
@@ -19,14 +20,9 @@ func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
-func fire(speed):
-	for pivot in get_children():
-		pivot.get_node("Line2D").get_node("AnimationPlayer").speed_scale = speed
-		pivot.get_node("Line2D").get_node("AnimationPlayer").stop()
-		pivot.get_node("Line2D").get_node("AnimationPlayer").play("move")
-
-
-func stop_fire():
-	for pivot in get_children():
-		if pivot.get_node("Line2D").get_node("AnimationPlayer").is_playing():
-			pivot.get_node("Line2D").get_node("AnimationPlayer").stop()
+func set_pos_x(new_pos_x: float, should_move_instantly: bool):
+	if should_move_instantly:
+		for pivot in get_children():
+			pivot.get_node("Line2D").position.x = new_pos_x
+	
+	pos_x = new_pos_x

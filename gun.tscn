@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://8heg8ep15o5d"]
 
-[ext_resource type="Script" path="res://handgun.gd" id="1_xymik"]
+[ext_resource type="Script" path="res://gun.gd" id="1_xymik"]
 [ext_resource type="AudioStream" uid="uid://di3veshd550l" path="res://art/handgun_fire.mp3" id="2_04lqr"]
 
-[node name="Handgun" type="Node2D"]
+[node name="Gun" type="Node2D"]
 script = ExtResource("1_xymik")
 
 [node name="AudioFire" type="AudioStreamPlayer2D" parent="."]

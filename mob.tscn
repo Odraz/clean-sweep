@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://mob.gd" id="1_85dvw"]
 [ext_resource type="Texture2D" uid="uid://dadl8sl0ceyop" path="res://art/mob_idle.png" id="2_f11ku"]
 [ext_resource type="Texture2D" uid="uid://ds4mm85yfj6ov" path="res://art/mob_run1.png" id="3_c0ojw"]
-[ext_resource type="PackedScene" uid="uid://8heg8ep15o5d" path="res://handgun.tscn" id="3_kwxxi"]
+[ext_resource type="PackedScene" uid="uid://8heg8ep15o5d" path="res://gun.tscn" id="3_kwxxi"]
 [ext_resource type="Texture2D" uid="uid://c53etf8lpabq7" path="res://art/mob_run2.png" id="4_31nw5"]
 [ext_resource type="Texture2D" uid="uid://n103b405f6my" path="res://art/mob_run3.png" id="5_hg360"]
 
@@ -64,11 +64,11 @@ neighbor_distance = 100.0
 max_neighbors = 1
 debug_enabled = true
 
-[node name="Handgun" parent="." instance=ExtResource("3_kwxxi")]
+[node name="Gun" parent="." instance=ExtResource("3_kwxxi")]
 
 [node name="TriggerTimer" type="Timer" parent="."]
 wait_time = 0.4
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
-[connection signal="hit" from="Handgun" to="." method="_on_handgun_hit"]
+[connection signal="hit" from="Gun" to="." method="_on_gun_hit"]
 [connection signal="timeout" from="TriggerTimer" to="." method="_on_trigger_timer_timeout"]

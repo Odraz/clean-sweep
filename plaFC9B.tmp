@@ -94,5 +94,4 @@ pitch_scale = 0.8
 stream = ExtResource("8_lt0s3")
 volume_db = -4.0
 
-[connection signal="hit" from="Gun" to="." method="_on_gun_hit"]
 [connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
