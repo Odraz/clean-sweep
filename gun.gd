@@ -25,7 +25,7 @@ func shoot(start_position: Vector2, direction: Vector2, gun_range: float, disper
 
 	spawn_bullet(result, start_position, direction)
 
-	$AudioFire.play()
+	play_audio()
 
 
 func spawn_bullet(result: Dictionary, start_position: Vector2, direction: Vector2):
@@ -43,3 +43,7 @@ func spawn_bullet(result: Dictionary, start_position: Vector2, direction: Vector
 func get_shoot_ray_end_position(start_position: Vector2, direction: Vector2, gun_range: float) -> Vector2:
 	return start_position + (direction - start_position).normalized() * gun_range
 	
+
+func play_audio():
+	$AudioFire.pitch_scale = randf_range(0.9, 1.1)
+	$AudioFire.play()
