@@ -21,8 +21,9 @@ GunStats="*res://gun_stats.gd"
 
 [display]
 
-window/size/viewport_width=1024
-window/size/viewport_height=768
+window/size/viewport_width=1920
+window/size/viewport_height=1081
+window/size/mode=3
 
 [input]
 

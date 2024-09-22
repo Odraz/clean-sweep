@@ -20,7 +20,7 @@ func shoot(start_position: Vector2, direction: Vector2, gun_range: float, disper
 
 	var result = space_state.intersect_ray(query)
 
-	if result:		
+	if result and result.has("collider"):
 		hit.emit(result.collider)
 
 	spawn_bullet(result, start_position, direction)

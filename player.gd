@@ -13,9 +13,15 @@ func _ready():
 	screen_size = get_viewport_rect().size
 
 func _physics_process(delta):
+	if not is_visible_in_tree():
+		return
+
 	move(delta)
 
 func _process(_delta):	
+	if not is_visible_in_tree():
+		return
+
 	turn()
 
 	var has_shot = Input.is_action_just_pressed("shoot_gun")
@@ -25,7 +31,7 @@ func _process(_delta):
 	$Crosshair.set_pos_x(new_crosshair_pos_x, has_shot)
 
 	if has_shot:
-		$Gun.shoot(position, get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 22)
+		$Gun.shoot(position, get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 20)
 	
 	if velocity.length() > 0:
 		$AnimatedSprite2D.play("move")
@@ -43,8 +49,8 @@ func _on_gun_hit(collider: Object):
 
 func _on_mob_hit(collider: Object) -> void:
 	if collider == self:
-		hide()
-		position = Vector2(0, 0)
+		hide()	
+		$CollisionShape2D.disabled = true	
 		$Audio/AudioDeath.play()
 		$DeathTimer.start()
 

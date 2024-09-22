@@ -12,7 +12,6 @@ enum GunStat {
     RECOIL, # 0 to 1, where 0 is 0 recoil and 1 is 40 pixels
 }
 
-# Dictionary of gun stats
 const GUN_STATS: Dictionary = {
     GunType.PISTOL: {
         GunStat.PRECISION_HIP: 1.0,

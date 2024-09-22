@@ -102,7 +102,7 @@ func is_player_in_light_of_sight() -> bool:
 
 	var result = space_state.intersect_ray(query)
 
-	return result.collider == player
+	return result.collider == player if result.has("collider") else false
 
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity:Vector2):
