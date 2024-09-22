@@ -2,10 +2,30 @@ extends Node2D
 
 signal hit(collider: Object)
 
+@export var type: GunStats.GunType = GunStats.GunType.HANDGUN
+
+@onready var magazine_size: int = GunStats.GUN_STATS[type][GunStats.GunStat.MAGAZINE_SIZE]
+@onready var ammo: int = magazine_size
+
 var end_position: Vector2
-var type: GunStats.GunType = GunStats.GunType.HANDGUN
+
+func _ready():
+	$ReloadTimer.wait_time = GunStats.GUN_STATS[type][GunStats.GunStat.RELOAD_TIME]
+
+	print("Gun:", type)
+	print("Magazine size:", magazine_size)
 
 func shoot(start_position: Vector2, direction: Vector2, gun_range: float, dispersion: float):
+	if not $ReloadTimer.is_stopped():
+		return
+
+	if ammo <= 0:
+		$AudioEmpty.play()
+
+		return
+	
+	ammo -= 1
+
 	var space_state = get_world_2d().direct_space_state
 
 	end_position = get_shoot_ray_end_position(start_position, direction, gun_range)
@@ -47,3 +67,14 @@ func get_shoot_ray_end_position(start_position: Vector2, direction: Vector2, gun
 func play_audio():
 	$AudioFire.pitch_scale = randf_range(0.9, 1.1)
 	$AudioFire.play()
+
+
+func reload():
+	if $ReloadTimer.is_stopped():
+		$ReloadTimer.start()
+
+
+func _on_reload_timer_timeout():
+	ammo = magazine_size
+
+	$ReloadTimer.stop()

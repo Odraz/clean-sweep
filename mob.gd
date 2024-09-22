@@ -7,12 +7,11 @@ enum State { patrolling, watching, chasing }
 @export var movement_speed: float = 200.0
 @export var movement_target_positions: Array[Marker2D] = []
 
-var current_movement_target_index: int = 0
-
-var state: State = State.patrolling
-
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var player: Node2D = get_parent().get_node("Player")
+
+var current_movement_target_index: int = 0
+var state: State = State.patrolling
 
 func _ready():
 	# These values need to be adjusted for the actor's speed

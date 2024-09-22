@@ -1,10 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://8heg8ep15o5d"]
+[gd_scene load_steps=4 format=3 uid="uid://8heg8ep15o5d"]
 
 [ext_resource type="Script" path="res://gun.gd" id="1_xymik"]
 [ext_resource type="AudioStream" uid="uid://di3veshd550l" path="res://art/handgun_fire.mp3" id="2_04lqr"]
+[ext_resource type="AudioStream" uid="uid://ch7d226qpbor1" path="res://art/handgun_empty.mp3" id="3_ppuuq"]
 
 [node name="Gun" type="Node2D"]
 script = ExtResource("1_xymik")
 
 [node name="AudioFire" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_04lqr")
+
+[node name="AudioEmpty" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_ppuuq")
+
+[node name="ReloadTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
