@@ -51,8 +51,7 @@ material = SubResource("CanvasItemMaterial_rmulm")
 rotation = 1.5708
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_pd0qd")
-animation = &"move"
-frame_progress = 0.616333
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(2, 2)

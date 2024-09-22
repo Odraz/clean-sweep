@@ -13,7 +13,7 @@ func _process(delta: float):
 	global_rotation = 0
 
 	for pivot in get_children():
-		pivot.get_node("Line2D").position.x = lerp(pivot.get_node("Line2D").position.x, pos_x, delta * 12)
+		pivot.get_node("Line2D").position.x = lerp(pivot.get_node("Line2D").position.x, pos_x, delta * 10)
 
 
 func _exit_tree():

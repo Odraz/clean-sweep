@@ -1,7 +1,7 @@
 extends Node
 
 enum GunType {
-    PISTOL,
+    HANDGUN,
     SHOTGUN,
     RIFLE
 }
@@ -13,19 +13,19 @@ enum GunStat {
 }
 
 const GUN_STATS: Dictionary = {
-    GunType.PISTOL: {
-        GunStat.PRECISION_HIP: 1.0,
-        GunStat.PRECISION_AIM: 0.8,
+    GunType.HANDGUN: {
+        GunStat.PRECISION_HIP: 0.9,
+        GunStat.PRECISION_AIM: 1.0,
         GunStat.RECOIL: 0.3,
     },
     GunType.SHOTGUN: {
-        GunStat.PRECISION_HIP: 0.4,
-        GunStat.PRECISION_AIM: 0.7,
+        GunStat.PRECISION_HIP: 0,
+        GunStat.PRECISION_AIM: 0.2,
         GunStat.RECOIL: 0.8,
     },
     GunType.RIFLE: {
-        GunStat.PRECISION_HIP: 0.4,
-        GunStat.PRECISION_AIM: 1.0,
-        GunStat.RECOIL: 0.7,
+        GunStat.PRECISION_HIP: 0.2,
+        GunStat.PRECISION_AIM: 2.5,
+        GunStat.RECOIL: 0.5,
     }
 }

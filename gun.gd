@@ -3,7 +3,7 @@ extends Node2D
 signal hit(collider: Object)
 
 var end_position: Vector2
-var type: GunStats.GunType = GunStats.GunType.PISTOL
+var type: GunStats.GunType = GunStats.GunType.HANDGUN
 
 func shoot(start_position: Vector2, direction: Vector2, gun_range: float, dispersion: float):
 	var space_state = get_world_2d().direct_space_state

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dinfdr66ir8uy"
-path="res://.godot/imported/player_run_handgun1.png-79f2d80520758383ff9550bbf9ef4120.ctex"
+uid="uid://7mwi54vvdt53"
+path="res://.godot/imported/player_sheet.png-0d5d27bea6c6bd960ca2feca8075d39f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/player_run_handgun1.png"
-dest_files=["res://.godot/imported/player_run_handgun1.png-79f2d80520758383ff9550bbf9ef4120.ctex"]
+source_file="res://art/player_sheet.png"
+dest_files=["res://.godot/imported/player_sheet.png-0d5d27bea6c6bd960ca2feca8075d39f.ctex"]
 
 [params]
 
