@@ -216,5 +216,8 @@ type = 2
 
 [connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
 [connection signal="hit" from="Guns/Handgun" to="." method="_on_gun_hit"]
+[connection signal="reloaded" from="Guns/Handgun" to="." method="_on_gun_reloaded"]
 [connection signal="hit" from="Guns/Shotgun" to="." method="_on_gun_hit"]
+[connection signal="reloaded" from="Guns/Shotgun" to="." method="_on_gun_reloaded"]
 [connection signal="hit" from="Guns/Rifle" to="." method="_on_gun_hit"]
+[connection signal="reloaded" from="Guns/Rifle" to="." method="_on_gun_reloaded"]

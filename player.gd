@@ -2,6 +2,9 @@ extends CharacterBody2D
 
 signal hit(collider: Object)
 signal player_died()
+signal gun_changed(current_gun)
+signal gun_shot(current_gun)
+signal gun_reloaded(current_gun)
 
 const GUN_ANIMATIONS = {
 	GunStats.GunType.HANDGUN: "handgun",
@@ -16,7 +19,6 @@ var speed_run: float = 200
 var speec_aim_modifier: float = 0.5
 
 var screen_size
-
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -37,6 +39,7 @@ func _process(_delta):
 
 	if has_shot:
 		current_gun.shoot(position, get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 20)
+		gun_shot.emit(current_gun)
 	
 	var new_crosshair_pos_x = calculate_crosshair_pos_x(has_shot)
 
@@ -53,7 +56,7 @@ func _process(_delta):
 
 	handle_gun_selection()
 
-	if Input.is_action_just_pressed("gun_reload"):
+	if Input.is_action_just_pressed("gun_reload") and current_gun.magazines > 0:
 		current_gun.reload()
 
 
@@ -119,4 +122,11 @@ func handle_gun_selection():
 		current_gun = $Guns.get_child((current_gun.get_index() + 1) % $Guns.get_child_count())
 	elif Input.is_action_just_pressed("gun_select_previous"):
 		current_gun = $Guns.get_child((current_gun.get_index() - 1 + $Guns.get_child_count()) % $Guns.get_child_count())
+	else:
+		return
+	
+	gun_changed.emit(current_gun)
 
+
+func _on_gun_reloaded():
+	gun_reloaded.emit(current_gun)

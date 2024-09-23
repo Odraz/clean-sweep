@@ -1,19 +1,20 @@
 extends Node2D
 
 signal hit(collider: Object)
+signal reloaded()
 
 @export var type: GunStats.GunType = GunStats.GunType.HANDGUN
 
 @onready var magazine_size: int = GunStats.GUN_STATS[type][GunStats.GunStat.MAGAZINE_SIZE]
+@onready var magazine_count: int = GunStats.GUN_STATS[type][GunStats.GunStat.MAGAZINE_COUNT]
 @onready var ammo: int = magazine_size
+@onready var magazines: int = magazine_count
 
 var end_position: Vector2
 
 func _ready():
 	$ReloadTimer.wait_time = GunStats.GUN_STATS[type][GunStats.GunStat.RELOAD_TIME]
 
-	print("Gun:", type)
-	print("Magazine size:", magazine_size)
 
 func shoot(start_position: Vector2, direction: Vector2, gun_range: float, dispersion: float):
 	if not $ReloadTimer.is_stopped():
@@ -75,6 +76,12 @@ func reload():
 
 
 func _on_reload_timer_timeout():
+	if magazine_count <= 0:
+		return
+
 	ammo = magazine_size
+	magazines -= 1
 
 	$ReloadTimer.stop()
+
+	reloaded.emit()
