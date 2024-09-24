@@ -504,6 +504,7 @@ position = Vector2(648, 472)
 [connection signal="gun_changed" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_changed"]
 [connection signal="gun_reloaded" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_reloaded"]
 [connection signal="gun_shot" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_shot"]
+[connection signal="gun_started_reloading" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_started_reloading"]
 [connection signal="hit" from="Player" to="Mob" method="_on_player_hit"]
 [connection signal="player_died" from="Player" to="." method="_on_player_player_died"]
 [connection signal="hit" from="Mob" to="Player" method="_on_mob_hit"]

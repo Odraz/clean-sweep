@@ -4,6 +4,7 @@ signal hit(collider: Object)
 signal player_died()
 signal gun_changed(current_gun)
 signal gun_shot(current_gun)
+signal gun_started_reloading(current_gun)
 signal gun_reloaded(current_gun)
 
 const GUN_ANIMATIONS = {
@@ -57,7 +58,7 @@ func _process(_delta):
 	handle_gun_selection()
 
 	if Input.is_action_just_pressed("gun_reload") and current_gun.magazines > 0:
-		current_gun.reload()
+		reload()
 
 
 func _on_gun_hit(collider: Object):
@@ -126,6 +127,12 @@ func handle_gun_selection():
 		return
 	
 	gun_changed.emit(current_gun)
+
+
+func reload():
+	current_gun.reload()
+
+	gun_started_reloading.emit(current_gun)
 
 
 func _on_gun_reloaded():
