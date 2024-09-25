@@ -204,7 +204,7 @@ pitch_scale = 0.8
 stream = ExtResource("8_lt0s3")
 volume_db = -4.0
 
-[node name="Guns" type="Node" parent="."]
+[node name="Guns" type="Node2D" parent="."]
 
 [node name="Handgun" parent="Guns" instance=ExtResource("6_n2gmc")]
 
@@ -217,7 +217,10 @@ type = 2
 [connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
 [connection signal="hit" from="Guns/Handgun" to="." method="_on_gun_hit"]
 [connection signal="reloaded" from="Guns/Handgun" to="." method="_on_gun_reloaded"]
+[connection signal="shot" from="Guns/Handgun" to="." method="_on_gun_shot"]
 [connection signal="hit" from="Guns/Shotgun" to="." method="_on_gun_hit"]
 [connection signal="reloaded" from="Guns/Shotgun" to="." method="_on_gun_reloaded"]
+[connection signal="shot" from="Guns/Shotgun" to="." method="_on_gun_shot"]
 [connection signal="hit" from="Guns/Rifle" to="." method="_on_gun_hit"]
 [connection signal="reloaded" from="Guns/Rifle" to="." method="_on_gun_reloaded"]
+[connection signal="shot" from="Guns/Rifle" to="." method="_on_gun_shot"]

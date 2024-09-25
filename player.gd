@@ -39,8 +39,7 @@ func _process(_delta):
 	var has_shot = Input.is_action_just_pressed("gun_shoot")
 
 	if has_shot:
-		current_gun.shoot(position, get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 20)
-		gun_shot.emit(current_gun)
+		current_gun.shoot(get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 20)
 	
 	var new_crosshair_pos_x = calculate_crosshair_pos_x(has_shot)
 
@@ -76,6 +75,14 @@ func _on_mob_hit(collider: Object) -> void:
 
 func _on_death_timer_timeout() -> void:
 	player_died.emit()
+
+
+func _on_gun_reloaded():
+	gun_reloaded.emit(current_gun)
+
+
+func _on_gun_shot() -> void:
+	gun_shot.emit(current_gun)
 
 
 func move(_delta: float):	
@@ -133,7 +140,3 @@ func reload():
 	current_gun.reload()
 
 	gun_started_reloading.emit(current_gun)
-
-
-func _on_gun_reloaded():
-	gun_reloaded.emit(current_gun)

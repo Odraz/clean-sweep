@@ -35,7 +35,7 @@ func set_gun_magazines(current_gun: Variant):
 func _on_player_gun_started_reloading(current_gun: Variant):
 	$ProgressBar.value = 0
 	$ProgressBar.visible = true
-	$ProgressBar.max_value = GunStats.GUN_STATS[current_gun.type][GunStats.GunStat.RELOAD_TIME] # 1 is 1 second, 2 is 2 seconds, etc.
+	$ProgressBar.max_value = GunStats.GUN_STATS[current_gun.type][GunStats.GunStat.RELOAD_TIME]
 
 	$ProgressBar/Timer.start()
 

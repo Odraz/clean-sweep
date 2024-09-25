@@ -15,4 +15,8 @@ stream = ExtResource("3_ppuuq")
 
 [node name="ReloadTimer" type="Timer" parent="."]
 
+[node name="BurstTimer" type="Timer" parent="."]
+wait_time = 0.1
+
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
+[connection signal="timeout" from="BurstTimer" to="." method="_on_burst_timer_timeout"]

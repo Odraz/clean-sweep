@@ -478,7 +478,12 @@ color = Color(0.8, 0.8, 0.8, 1)
 position = Vector2(16, 288)
 
 [node name="Mob" parent="." node_paths=PackedStringArray("movement_target_positions") instance=ExtResource("4_71p88")]
-position = Vector2(688, 288)
+position = Vector2(688, 176)
+movement_speed = 150.0
+movement_target_positions = [NodePath("../Waypoints/Marker2D"), NodePath("../Waypoints/Marker2D2"), NodePath("../Waypoints/Marker2D3"), NodePath("../Waypoints/Marker2D4")]
+
+[node name="Mob2" parent="." node_paths=PackedStringArray("movement_target_positions") instance=ExtResource("4_71p88")]
+position = Vector2(688, 376)
 movement_speed = 150.0
 movement_target_positions = [NodePath("../Waypoints/Marker2D"), NodePath("../Waypoints/Marker2D2"), NodePath("../Waypoints/Marker2D3"), NodePath("../Waypoints/Marker2D4")]
 
@@ -508,3 +513,4 @@ position = Vector2(648, 472)
 [connection signal="hit" from="Player" to="Mob" method="_on_player_hit"]
 [connection signal="player_died" from="Player" to="." method="_on_player_player_died"]
 [connection signal="hit" from="Mob" to="Player" method="_on_mob_hit"]
+[connection signal="hit" from="Mob2" to="Player" method="_on_mob_hit"]

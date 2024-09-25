@@ -13,6 +13,8 @@ enum GunStat {
     MAGAZINE_COUNT, # 0 to infinity, where 0 is infinite magazine count
     MAGAZINE_SIZE, # 0 to infinity, where 0 is infinite magazine size
     RELOAD_TIME, # 0 to infinity, where 0 is instant reload time
+    SINGLE_SHOT_BULLET_COUNT,
+    BURST_SHOT_COUNT,
 }
 
 const GUN_STATS: Dictionary = {
@@ -23,6 +25,9 @@ const GUN_STATS: Dictionary = {
         GunStat.MAGAZINE_COUNT: 5,
         GunStat.MAGAZINE_SIZE: 10,
         GunStat.RELOAD_TIME: 1.0,
+        GunStat.SINGLE_SHOT_BULLET_COUNT: 1,
+        GunStat.BURST_SHOT_COUNT: 1,
+
     },
     GunType.SHOTGUN: {
         GunStat.PRECISION_HIP: 0,
@@ -31,6 +36,8 @@ const GUN_STATS: Dictionary = {
         GunStat.MAGAZINE_COUNT: 10,
         GunStat.MAGAZINE_SIZE: 2,
         GunStat.RELOAD_TIME: 2.0,
+        GunStat.SINGLE_SHOT_BULLET_COUNT: 3,
+        GunStat.BURST_SHOT_COUNT: 1,
     },
     GunType.RIFLE: {
         GunStat.PRECISION_HIP: 0.2,
@@ -39,5 +46,7 @@ const GUN_STATS: Dictionary = {
         GunStat.MAGAZINE_COUNT: 3,
         GunStat.MAGAZINE_SIZE: 30,
         GunStat.RELOAD_TIME: 1.5,
+        GunStat.SINGLE_SHOT_BULLET_COUNT: 1,
+        GunStat.BURST_SHOT_COUNT: 3,
     }
 }
