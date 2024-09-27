@@ -1,16 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://1gwie50uy6qw"]
+[gd_scene load_steps=5 format=3 uid="uid://1gwie50uy6qw"]
 
 [ext_resource type="Script" path="res://bullet.gd" id="1_gkpn8"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_41tij"]
+light_mode = 2
 
 [sub_resource type="Gradient" id="Gradient_el3jo"]
 offsets = PackedFloat32Array(0, 0.213333, 0.793333, 1)
 colors = PackedColorArray(0.85, 0.694875, 0.2295, 0, 0.85, 0.467358, 0.2295, 1, 0.88, 0.7559, 0.3836, 1, 1, 1, 1, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_75si3"]
+light_mode = 2
 
 [node name="Bullet" type="Node"]
 script = ExtResource("1_gkpn8")
 smoke_fade_out_speed = null
 
 [node name="Fire" type="Line2D" parent="."]
+material = SubResource("CanvasItemMaterial_41tij")
 points = PackedVector2Array(73, 18, 174.048, 18)
 width = 2.0
 gradient = SubResource("Gradient_el3jo")
@@ -20,6 +27,7 @@ antialiased = true
 
 [node name="Smoke" type="Line2D" parent="."]
 visible = false
+material = SubResource("CanvasItemMaterial_75si3")
 points = PackedVector2Array(73, 18, 174, 18)
 width = 2.0
 default_color = Color(0.34, 0.34, 0.34, 1)

@@ -59,12 +59,22 @@ func _process(_delta):
 	if Input.is_action_just_pressed("gun_reload") and current_gun.magazines > 0:
 		reload()
 
+	# Instantiate new grenade scene (with RigidBody2D) and throw it
+	if Input.is_action_just_released("grenade_throw"):
+		var grenade_scene = load("res://grenade.tscn")
+		var grenade = grenade_scene.instantiate()
+
+		get_tree().get_root().add_child(grenade)
+
+		grenade.global_position = global_position + Vector2.RIGHT.rotated(rotation) * 30
+		grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * 300, global_position)
+
 
 func _on_gun_hit(collider: Object):
 	hit.emit(collider)
 
 
-func _on_mob_hit(collider: Object) -> void:
+func _on_hit(collider: Object) -> void:
 	if collider == self:
 		hide()	
 		$CollisionShape2D.disabled = true

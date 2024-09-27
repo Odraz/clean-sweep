@@ -1,8 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://8heg8ep15o5d"]
+[gd_scene load_steps=7 format=3 uid="uid://8heg8ep15o5d"]
 
 [ext_resource type="Script" path="res://gun.gd" id="1_xymik"]
 [ext_resource type="AudioStream" uid="uid://di3veshd550l" path="res://art/handgun_fire.mp3" id="2_04lqr"]
 [ext_resource type="AudioStream" uid="uid://ch7d226qpbor1" path="res://art/handgun_empty.mp3" id="3_ppuuq"]
+[ext_resource type="AudioStream" uid="uid://dt3cnyiest678" path="res://art/reload.mp3" id="4_mxibw"]
+[ext_resource type="Texture2D" uid="uid://cnmet7abwws1e" path="res://art/smoke_1.png" id="5_eecyn"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qicop"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+angular_velocity_min = 9.36998
+angular_velocity_max = 30.04
+gravity = Vector3(0, 0, 0)
 
 [node name="Gun" type="Node2D"]
 script = ExtResource("1_xymik")
@@ -13,10 +23,25 @@ stream = ExtResource("2_04lqr")
 [node name="AudioEmpty" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_ppuuq")
 
+[node name="AudioReload" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_mxibw")
+volume_db = 5.0
+
 [node name="ReloadTimer" type="Timer" parent="."]
 
 [node name="BurstTimer" type="Timer" parent="."]
 wait_time = 0.1
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+visible = false
+emitting = false
+amount = 3
+process_material = SubResource("ParticleProcessMaterial_qicop")
+texture = ExtResource("5_eecyn")
+lifetime = 3.0
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
 
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
 [connection signal="timeout" from="BurstTimer" to="." method="_on_burst_timer_timeout"]

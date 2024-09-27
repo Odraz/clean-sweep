@@ -42,7 +42,7 @@ animations = [{
 radius = 4.5
 height = 20.0
 
-[node name="Mob" type="CharacterBody2D"]
+[node name="Mob" type="CharacterBody2D" groups=["characters"]]
 script = ExtResource("1_85dvw")
 metadata/_edit_group_ = true
 
@@ -60,7 +60,7 @@ shape = SubResource("CapsuleShape2D_kfuoi")
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 avoidance_enabled = true
 neighbor_distance = 100.0
-max_neighbors = 1
+max_neighbors = 5
 debug_enabled = true
 
 [node name="Gun" parent="." instance=ExtResource("3_kwxxi")]

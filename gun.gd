@@ -31,6 +31,7 @@ func _on_reload_timer_timeout():
 	magazines -= 1
 
 	$ReloadTimer.stop()
+	$AudioReload.stop()
 
 	reloaded.emit()
 
@@ -117,3 +118,4 @@ func play_audio():
 func reload():
 	if $ReloadTimer.is_stopped():
 		$ReloadTimer.start()
+		$AudioReload.play()

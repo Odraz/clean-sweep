@@ -118,6 +118,6 @@ func _on_gun_hit(collider: Object):
 	hit.emit(collider)
 
 
-func _on_player_hit(collider: Object):
+func _on_hit(collider: Object):
 	if collider == self:
 		queue_free()

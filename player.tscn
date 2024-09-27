@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cockkd0011ati"]
+[gd_scene load_steps=27 format=3 uid="uid://cockkd0011ati"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_svbte"]
 [ext_resource type="Texture2D" uid="uid://7mwi54vvdt53" path="res://art/player_sheet.png" id="2_n6f6o"]
@@ -7,6 +7,8 @@
 [ext_resource type="AudioStream" uid="uid://5754yqas4nxc" path="res://art/player_footstep.wav" id="7_cg8of"]
 [ext_resource type="PackedScene" uid="uid://cpgffmrxk8qoh" path="res://crosshair.tscn" id="8_37ybf"]
 [ext_resource type="AudioStream" uid="uid://bpqi3xio2xntf" path="res://art/player_death.wav" id="8_lt0s3"]
+[ext_resource type="AudioStream" uid="uid://dug8idgj1y43o" path="res://art/shotgun_fire.mp3" id="8_wmh5j"]
+[ext_resource type="AudioStream" uid="uid://du23p3esgt877" path="res://art/rifle_fire.mp3" id="9_os5fy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g8bik"]
 atlas = ExtResource("2_n6f6o")
@@ -156,7 +158,7 @@ height = 36.0
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_pnjyr"]
 polygon = PackedVector2Array(14, -41, -4, -38, -17.3333, -30, -28, -18, -31.3333, -9.33333, -32.6667, 0, -30.6667, 10, -26, 20, -15.3333, 31.3333, -2, 38, 16, 42, -38.6667, 34, -37.3333, -36.6667)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["characters"]]
 script = ExtResource("1_svbte")
 metadata/_edit_group_ = true
 
@@ -211,8 +213,15 @@ volume_db = -4.0
 [node name="Shotgun" parent="Guns" instance=ExtResource("6_n2gmc")]
 type = 1
 
+[node name="AudioFire" parent="Guns/Shotgun" index="0"]
+stream = ExtResource("8_wmh5j")
+volume_db = -4.0
+
 [node name="Rifle" parent="Guns" instance=ExtResource("6_n2gmc")]
 type = 2
+
+[node name="AudioFire" parent="Guns/Rifle" index="0"]
+stream = ExtResource("9_os5fy")
 
 [connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
 [connection signal="hit" from="Guns/Handgun" to="." method="_on_gun_hit"]
@@ -224,3 +233,6 @@ type = 2
 [connection signal="hit" from="Guns/Rifle" to="." method="_on_gun_hit"]
 [connection signal="reloaded" from="Guns/Rifle" to="." method="_on_gun_reloaded"]
 [connection signal="shot" from="Guns/Rifle" to="." method="_on_gun_shot"]
+
+[editable path="Guns/Shotgun"]
+[editable path="Guns/Rifle"]
