@@ -67,7 +67,7 @@ func _physics_process(_delta):
 
 	var next_path_position: Vector2 = navigation_agent.get_next_path_position()
 
-	velocity = global_position.direction_to(next_path_position)
+	var new_velocity = global_position.direction_to(next_path_position) * movement_speed
 
 	# Face the direction of the next path position.
 	if velocity.length_squared() > 0:
@@ -75,7 +75,9 @@ func _physics_process(_delta):
 
 		$AnimatedSprite2D.play("move")
 
-	_on_navigation_agent_2d_velocity_computed(velocity)
+	$NavigationAgent2D.set_velocity(new_velocity)
+
+	move_and_slide()
 
 
 func set_waypoint_randomly():
@@ -104,10 +106,8 @@ func is_player_in_light_of_sight() -> bool:
 	return result.collider == player if result.has("collider") else false
 
 
-func _on_navigation_agent_2d_velocity_computed(safe_velocity:Vector2):
-	velocity = safe_velocity * movement_speed
-
-	move_and_slide()
+func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2):
+	velocity = safe_velocity
 
 
 func _on_trigger_timer_timeout():

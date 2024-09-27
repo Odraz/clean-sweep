@@ -15,7 +15,7 @@ height = 4.0
 light_mode = 2
 
 [node name="Grenade" type="RigidBody2D"]
-mass = 0.1
+mass = 0.001
 physics_material_override = SubResource("PhysicsMaterial_pj1un")
 gravity_scale = 0.0
 script = ExtResource("1_e570e")
