@@ -15,10 +15,16 @@ func _on_timer_timeout() -> void:
 	explode()
 
 
+func _on_queue_free_timeout():
+	queue_free()
+
+
 func explode() -> void:
 	$AudioExplosion.play()
 	$Sprite2D.hide()
 	$CollisionShape2D.disabled = true
+
+	spawn_blast()
 
 	var characters = get_tree().get_nodes_in_group("characters")
 
@@ -38,6 +44,10 @@ func explode() -> void:
 				hit.emit(character)
 
 
-func _on_queue_free_timeout():
-	queue_free()
+func spawn_blast():
+	var blast_scene = load("res://grenade_blast.tscn")
+	var explosion = blast_scene.instantiate()
 
+	explosion.global_position = global_position
+
+	get_tree().get_root().add_child(explosion)
