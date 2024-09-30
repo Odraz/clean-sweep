@@ -9,8 +9,9 @@ script = ExtResource("1_xxs7n")
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -23.0
+offset_top = -61.0
 offset_right = 71.0
+offset_bottom = -38.0
 grow_vertical = 0
 size_flags_horizontal = 4
 text = "Handgun"
@@ -20,8 +21,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 88.0
-offset_top = -23.0
+offset_top = -61.0
 offset_right = 159.0
+offset_bottom = -38.0
 grow_vertical = 0
 size_flags_horizontal = 4
 text = "10/10"
@@ -31,8 +33,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 152.0
-offset_top = -23.0
+offset_top = -61.0
 offset_right = 223.0
+offset_bottom = -38.0
 grow_vertical = 0
 size_flags_horizontal = 4
 text = "5/5"
@@ -43,9 +46,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 223.0
-offset_top = -23.0
+offset_top = -61.0
 offset_right = 391.0
-offset_bottom = 4.0
+offset_bottom = -34.0
 grow_vertical = 0
 show_percentage = false
 
@@ -67,5 +70,26 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.443137)
 text = "Reloading..."
+
+[node name="GrenadeName" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 71.0
+grow_vertical = 0
+size_flags_horizontal = 4
+text = "Grenade"
+
+[node name="GrenadeCount" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 88.0
+offset_top = -23.0
+offset_right = 159.0
+grow_vertical = 0
+size_flags_horizontal = 4
+text = "3/3"
 
 [connection signal="timeout" from="ProgressBar/Timer" to="." method="_on_timer_timeout"]

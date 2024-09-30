@@ -13,6 +13,8 @@ signal reloaded()
 @onready var single_shot_bullet_count: int = GunStats.GUN_STATS[type][GunStats.GunStat.SINGLE_SHOT_BULLET_COUNT]
 @onready var burst_shot_count: int = GunStats.GUN_STATS[type][GunStats.GunStat.BURST_SHOT_COUNT]
 
+@onready var particle_emitter: Resource = load("res://particle_emitter_bullet_impact.tscn")
+
 var direction: Vector2
 var gun_range: float
 var dispersion: float
@@ -90,6 +92,8 @@ func shoot_once():
 	if result and result.has("collider"):
 		hit.emit(result.collider)
 
+		spawn_impact_particles(result)
+
 	spawn_bullet(start_position, result)
 
 	shot.emit()
@@ -119,3 +123,16 @@ func reload():
 	if $ReloadTimer.is_stopped():
 		$ReloadTimer.start()
 		$AudioReload.play()
+
+
+func spawn_impact_particles(result: Dictionary):
+	var impact_particles = particle_emitter.instantiate()
+
+	impact_particles.global_position = result.position
+
+	if result.collider.is_in_group("characters"):
+		impact_particles.color = Color(1, 0, 0)
+
+	get_tree().get_root().add_child(impact_particles)
+
+	impact_particles.emitting = true

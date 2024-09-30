@@ -506,6 +506,7 @@ position = Vector2(72, 472)
 [node name="Marker2D4" type="Marker2D" parent="Waypoints"]
 position = Vector2(648, 472)
 
+[connection signal="grenade_thrown" from="Player" to="Camera2D/PlayerGUI" method="_on_player_grenade_thrown"]
 [connection signal="gun_changed" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_changed"]
 [connection signal="gun_reloaded" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_reloaded"]
 [connection signal="gun_shot" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_shot"]

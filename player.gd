@@ -6,6 +6,7 @@ signal gun_changed(current_gun)
 signal gun_shot(current_gun)
 signal gun_started_reloading(current_gun)
 signal gun_reloaded(current_gun)
+signal grenade_thrown(grenade_count: int, grenades: int)
 
 const GUN_ANIMATIONS = {
 	GunStats.GunType.HANDGUN: "handgun",
@@ -13,11 +14,14 @@ const GUN_ANIMATIONS = {
 	GunStats.GunType.RIFLE: "rifle",
 }
 
+const GRENADE_COUNT: int = 3
+
 @onready var current_gun: = $Guns/Handgun
 
 var speed_walk: float = 150
 var speed_run: float = 200
-var speec_aim_modifier: float = 0.5
+var speed_aim_modifier: float = 0.5
+var grenades: int = GRENADE_COUNT
 
 var screen_size
 
@@ -59,15 +63,8 @@ func _process(_delta):
 	if Input.is_action_just_pressed("gun_reload") and current_gun.magazines > 0:
 		reload()
 
-	# Instantiate new grenade scene (with RigidBody2D) and throw it
-	if Input.is_action_just_released("grenade_throw"):
-		var grenade_scene = load("res://grenade.tscn")
-		var grenade = grenade_scene.instantiate()
-
-		get_tree().get_root().add_child(grenade)
-
-		grenade.global_position = global_position + Vector2.RIGHT.rotated(rotation) * 30
-		grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * 300, global_position)
+	if Input.is_action_just_released("grenade_throw") and grenades > 0:
+		throw_grenade()
 
 
 func _on_gun_hit(collider: Object):
@@ -105,7 +102,7 @@ func move(_delta: float):
 	velocity = \
 		input_velocity \
 		* (speed_run if is_running else speed_walk) \
-		* (speec_aim_modifier if is_aiming else 1.0)
+		* (speed_aim_modifier if is_aiming else 1.0)
 
 	move_and_slide()
 	
@@ -150,3 +147,17 @@ func reload():
 	current_gun.reload()
 
 	gun_started_reloading.emit(current_gun)
+
+
+func throw_grenade():
+	var grenade_scene = load("res://grenade.tscn")
+	var grenade = grenade_scene.instantiate()
+
+	get_tree().get_root().add_child(grenade)
+
+	grenade.global_position = global_position + Vector2.RIGHT.rotated(rotation) * 30
+	grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * 300, global_position)
+
+	grenades -= 1
+
+	grenade_thrown.emit(GRENADE_COUNT, grenades)
