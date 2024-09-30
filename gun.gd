@@ -77,7 +77,7 @@ func shoot_once():
 	var space_state = get_world_2d().direct_space_state
 
 	# Get the start position of the ray which is the gun's global position.
-	var start_position = global_position
+	var start_position = $Muzzle.global_position
 	end_position = get_shoot_ray_end_position(start_position)
 	var diff = end_position - start_position
 
@@ -96,13 +96,15 @@ func shoot_once():
 
 	spawn_bullet(start_position, result)
 
+	play_fire_animation()
+
 	shot.emit()
 
 func spawn_bullet(start_position: Vector2, result: Dictionary):
 	var bullet_scene = load("res://bullet.tscn")
 	var bullet = bullet_scene.instantiate()
 
-	var bullet_start_position = start_position + (direction - start_position).normalized() * 30
+	var bullet_start_position = start_position + (direction - start_position).normalized() * 10
 	var bullet_end_position = result.position if result else end_position
 
 	bullet.init(bullet_start_position, bullet_end_position)
@@ -136,3 +138,7 @@ func spawn_impact_particles(result: Dictionary):
 	get_tree().get_root().add_child(impact_particles)
 
 	impact_particles.emitting = true
+
+func play_fire_animation():
+	$Muzzle.get_node("AnimatedSprite2D").play("fire_" + GunStats.GunType.keys()[type].to_lower())
+	$Muzzle.get_node("AnimatedSprite2D").play("default")

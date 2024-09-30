@@ -1,9 +1,66 @@
-[gd_scene load_steps=5 format=3 uid="uid://8heg8ep15o5d"]
+[gd_scene load_steps=11 format=3 uid="uid://8heg8ep15o5d"]
 
 [ext_resource type="Script" path="res://gun.gd" id="1_xymik"]
 [ext_resource type="AudioStream" uid="uid://di3veshd550l" path="res://art/handgun_fire.mp3" id="2_04lqr"]
 [ext_resource type="AudioStream" uid="uid://ch7d226qpbor1" path="res://art/handgun_empty.mp3" id="3_ppuuq"]
 [ext_resource type="AudioStream" uid="uid://dt3cnyiest678" path="res://art/reload.mp3" id="4_mxibw"]
+[ext_resource type="Texture2D" uid="uid://6fcqgfb0vlwh" path="res://art/soldier_sheet.png" id="5_oo05y"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_de786"]
+light_mode = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_743e1"]
+atlas = ExtResource("5_oo05y")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m78wu"]
+atlas = ExtResource("5_oo05y")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bd4tr"]
+atlas = ExtResource("5_oo05y")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g1fw3"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_743e1")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"fire_handgun",
+"speed": 30.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m78wu")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"fire_rifle",
+"speed": 30.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bd4tr")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"fire_shotgun",
+"speed": 30.0
+}]
 
 [node name="Gun" type="Node2D"]
 script = ExtResource("1_xymik")
@@ -22,6 +79,14 @@ volume_db = 5.0
 
 [node name="BurstTimer" type="Timer" parent="."]
 wait_time = 0.1
+
+[node name="Muzzle" type="Marker2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Muzzle"]
+material = SubResource("CanvasItemMaterial_de786")
+rotation = 1.5708
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_g1fw3")
 
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
 [connection signal="timeout" from="BurstTimer" to="." method="_on_burst_timer_timeout"]

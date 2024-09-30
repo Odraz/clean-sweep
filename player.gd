@@ -14,9 +14,18 @@ const GUN_ANIMATIONS = {
 	GunStats.GunType.RIFLE: "rifle",
 }
 
+enum PlayerState {
+	DEFAULT,
+	RELOADING,
+	THROWING_GRENADE,
+	DEAD,
+}
+
 const GRENADE_COUNT: int = 3
 
 @onready var current_gun: = $Guns/Handgun
+
+var state: PlayerState = PlayerState.DEFAULT
 
 var speed_walk: float = 150
 var speed_run: float = 200
@@ -29,42 +38,36 @@ func _ready():
 	screen_size = get_viewport_rect().size
 
 func _physics_process(delta):
-	if not is_visible_in_tree():
+	if state == PlayerState.DEAD:
 		return
 
 	move(delta)
 
 func _process(_delta):	
-	if not is_visible_in_tree():
+	if state == PlayerState.DEAD:
 		return
 
 	turn()
 
 	var has_shot = Input.is_action_just_pressed("gun_shoot")
 
-	if has_shot:
-		current_gun.shoot(get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 20)
+	if state == PlayerState.DEFAULT:
+		$AnimationBody.play("idle_" + GUN_ANIMATIONS[current_gun.type])
 	
-	var new_crosshair_pos_x = calculate_crosshair_pos_x(has_shot)
+		if Input.is_action_just_pressed("gun_reload") and current_gun.magazines > 0:
+			reload()
 
-	$Crosshair.set_pos_x(new_crosshair_pos_x, has_shot)
+		if Input.is_action_just_released("grenade_throw") and grenades > 0:
+			init_throw_grenade()
 
-	if velocity.length() > 0:
-		$AnimatedSprite2D.play("move_" + GUN_ANIMATIONS[current_gun.type])
+		if has_shot:
+			current_gun.shoot(get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 20)
+		
+		handle_gun_selection()
 
-		if not $Audio/AudioFootsteps.is_playing():
-			$Audio/AudioFootsteps.play()
-	else:
-		$AnimatedSprite2D.play("idle_" + GUN_ANIMATIONS[current_gun.type])
-		$Audio/AudioFootsteps.stop()
+	update_crosshair(has_shot)
 
-	handle_gun_selection()
-
-	if Input.is_action_just_pressed("gun_reload") and current_gun.magazines > 0:
-		reload()
-
-	if Input.is_action_just_released("grenade_throw") and grenades > 0:
-		throw_grenade()
+	animate_legs()
 
 
 func _on_gun_hit(collider: Object):
@@ -73,8 +76,13 @@ func _on_gun_hit(collider: Object):
 
 func _on_hit(collider: Object) -> void:
 	if collider == self:
-		hide()	
+		state = PlayerState.DEAD
+
+		$AnimationBody.play("death")
+		$AnimationLegs.hide()
 		$CollisionShape2D.disabled = true
+		$NavigationObstacle2D.avoidance_enabled = false
+		$LightOccluder2D.hide()
 		$Audio/AudioFootsteps.stop()
 		$Audio/AudioDeath.play()
 		$DeathTimer.start()
@@ -85,12 +93,28 @@ func _on_death_timer_timeout() -> void:
 
 
 func _on_gun_reloaded():
+	if state == PlayerState.DEAD:
+		return
+
+	state = PlayerState.DEFAULT
+
 	gun_reloaded.emit(current_gun)
 
 
 func _on_gun_shot() -> void:
 	gun_shot.emit(current_gun)
 
+
+func _on_animation_body_animation_finished():
+	if state == PlayerState.DEAD:
+		return
+
+	if $AnimationBody.animation  == "reload_" + GUN_ANIMATIONS[current_gun.type]:
+		state = PlayerState.DEFAULT
+	elif $AnimationBody.animation == "throw_grenade":
+		state = PlayerState.DEFAULT
+		throw_grenade()
+	
 
 func move(_delta: float):	
 	var input_velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -109,6 +133,12 @@ func move(_delta: float):
 
 func turn():	
 	look_at(get_global_mouse_position())
+
+
+func update_crosshair(has_shot: bool):
+	var new_crosshair_pos_x = calculate_crosshair_pos_x(has_shot)
+
+	$Crosshair.set_pos_x(new_crosshair_pos_x, has_shot)
 
 
 func scale_footsteps_pitch(is_running: bool):
@@ -144,12 +174,22 @@ func handle_gun_selection():
 
 
 func reload():
+	state = PlayerState.RELOADING
+
 	current_gun.reload()
 
 	gun_started_reloading.emit(current_gun)
 
+	$AnimationBody.play("reload_" + GUN_ANIMATIONS[current_gun.type])
 
-func throw_grenade():
+
+func init_throw_grenade():
+	state = PlayerState.THROWING_GRENADE
+
+	$AnimationBody.play("throw_grenade")
+
+
+func throw_grenade():		
 	var grenade_scene = load("res://grenade.tscn")
 	var grenade = grenade_scene.instantiate()
 
@@ -161,3 +201,15 @@ func throw_grenade():
 	grenades -= 1
 
 	grenade_thrown.emit(GRENADE_COUNT, grenades)
+
+
+func animate_legs():
+	if velocity.length() > 0:
+		$AnimationLegs.speed_scale = 1.5 * velocity.length() / speed_run
+		$AnimationLegs.play("move")
+
+		if not $Audio/AudioFootsteps.is_playing():
+			$Audio/AudioFootsteps.play()
+	else:
+		$AnimationLegs.play("idle")
+		$Audio/AudioFootsteps.stop()
