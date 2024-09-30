@@ -50,4 +50,4 @@ func spawn_blast():
 
 	explosion.global_position = global_position
 
-	get_tree().get_root().add_child(explosion)
+	get_tree().current_scene.add_child(explosion)

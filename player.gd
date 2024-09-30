@@ -193,7 +193,7 @@ func throw_grenade():
 	var grenade_scene = load("res://grenade.tscn")
 	var grenade = grenade_scene.instantiate()
 
-	get_tree().get_root().add_child(grenade)
+	get_tree().current_scene.add_child(grenade)
 
 	grenade.global_position = global_position + Vector2.RIGHT.rotated(rotation) * 30
 	grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * 300, global_position)

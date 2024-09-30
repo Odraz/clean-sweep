@@ -135,7 +135,7 @@ func spawn_impact_particles(result: Dictionary):
 	if result.collider.is_in_group("characters"):
 		impact_particles.color = Color(1, 0, 0)
 
-	get_tree().get_root().add_child(impact_particles)
+	get_tree().current_scene.add_child(impact_particles)
 
 	impact_particles.emitting = true
 

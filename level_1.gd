@@ -1,7 +1,5 @@
 extends Node
 
-signal game_over()
-
 func _process(_delta: float):
 	if Input.is_action_just_pressed("action_cancel"):
 		quit()
@@ -12,4 +10,4 @@ func _on_player_player_died():
 
 
 func quit():
-	game_over.emit()
+	get_tree().change_scene_to_file("res://main_menu.tscn")

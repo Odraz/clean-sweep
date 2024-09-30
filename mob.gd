@@ -39,6 +39,9 @@ func set_movement_target(movement_target: Vector2):
 
 
 func _physics_process(_delta):
+	if NavigationServer2D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
+		return
+
 	if is_player_in_light_of_sight():
 		rotation = global_position.direction_to(player.global_position).angle()
 
