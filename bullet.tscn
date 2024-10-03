@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://1gwie50uy6qw"]
+[gd_scene load_steps=6 format=3 uid="uid://1gwie50uy6qw"]
 
 [ext_resource type="Script" path="res://bullet.gd" id="1_gkpn8"]
 
@@ -12,9 +12,12 @@ colors = PackedColorArray(0.85, 0.694875, 0.2295, 0, 0.85, 0.467358, 0.2295, 1, 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_75si3"]
 light_mode = 2
 
-[node name="Bullet" type="Node"]
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_d2yfg"]
+
+[node name="Bullet" type="Area2D"]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_gkpn8")
-smoke_fade_out_speed = null
 
 [node name="Fire" type="Line2D" parent="."]
 material = SubResource("CanvasItemMaterial_41tij")
@@ -43,6 +46,9 @@ autostart = true
 [node name="SmokeTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_d2yfg")
 
 [connection signal="timeout" from="FireTimer" to="." method="_on_fire_timer_timeout"]
 [connection signal="timeout" from="SmokeTimer" to="." method="_on_smoke_timer_timeout"]

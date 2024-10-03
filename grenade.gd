@@ -36,6 +36,7 @@ func explode() -> void:
 			var space_state = get_world_2d().direct_space_state
 
 			var query = PhysicsRayQueryParameters2D.create(global_position, character_position)
+			query.collision_mask = 1
 			query.collide_with_areas = true
 
 			var result = space_state.intersect_ray(query)

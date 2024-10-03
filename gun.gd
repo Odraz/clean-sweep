@@ -85,6 +85,7 @@ func shoot_once():
 	end_position = diff.rotated(angle) + start_position
 
 	var query = PhysicsRayQueryParameters2D.create(start_position, end_position)
+	query.collision_mask = 1
 	query.collide_with_areas = true
 
 	var result = space_state.intersect_ray(query)
@@ -93,6 +94,8 @@ func shoot_once():
 		hit.emit(result.collider)
 
 		spawn_impact_particles(result)
+	else:
+		result = {}
 
 	spawn_bullet(start_position, result)
 
@@ -109,7 +112,7 @@ func spawn_bullet(start_position: Vector2, result: Dictionary):
 
 	bullet.init(bullet_start_position, bullet_end_position)
 
-	add_child(bullet)
+	get_tree().current_scene.add_child(bullet)
 
 
 func get_shoot_ray_end_position(start_position: Vector2) -> Vector2:
@@ -138,6 +141,7 @@ func spawn_impact_particles(result: Dictionary):
 	get_tree().current_scene.add_child(impact_particles)
 
 	impact_particles.emitting = true
+
 
 func play_fire_animation():
 	$Muzzle.get_node("AnimatedSprite2D").play("fire_" + GunStats.GunType.keys()[type].to_lower())

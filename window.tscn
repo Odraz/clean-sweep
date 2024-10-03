@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://beicbtelmoct3"]
+
+[ext_resource type="Script" path="res://window.gd" id="1_8snkq"]
+[ext_resource type="Texture2D" uid="uid://dsp8yen0u2k7u" path="res://art/objects.png" id="1_abp2w"]
+[ext_resource type="AudioStream" uid="uid://di215nnulo763" path="res://art/window_broken.wav" id="3_wi5xn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pwpq0"]
+atlas = ExtResource("1_abp2w")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fbmc0"]
+atlas = ExtResource("1_abp2w")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_byrot"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pwpq0")
+}],
+"loop": false,
+"name": &"broken",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fbmc0")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ydujd"]
+size = Vector2(0.0954696, 989.12)
+
+[node name="Window" type="Area2D"]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_8snkq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_byrot")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.5, 0)
+scale = Vector2(94.2709, 0.078858)
+shape = SubResource("RectangleShape2D_ydujd")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_wi5xn")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

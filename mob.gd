@@ -102,6 +102,7 @@ func is_player_in_light_of_sight() -> bool:
 	var space_state = get_world_2d().direct_space_state
 
 	var query = PhysicsRayQueryParameters2D.create(position, player.position)
+	query.collision_mask = 1
 	query.collide_with_areas = true
 
 	var result = space_state.intersect_ray(query)

@@ -25,3 +25,6 @@ func _on_smoke_timer_timeout():
 func init(start: Vector2, end: Vector2):
 	$Fire.points = [start, end]
 	$Smoke.points = [start, end]
+	$CollisionShape2D.shape = SegmentShape2D.new()
+	$CollisionShape2D.shape.a = start
+	$CollisionShape2D.shape.b = end
