@@ -508,8 +508,4 @@ player = NodePath("../Player")
 [node name="PlayerGUI" parent="." node_paths=PackedStringArray("player") instance=ExtResource("7_jg2ut")]
 player = NodePath("../Player")
 
-[connection signal="hit" from="Player" to="Mob" method="_on_hit"]
-[connection signal="hit" from="Player" to="Mob2" method="_on_hit"]
 [connection signal="player_died" from="Player" to="LevelControl" method="_on_player_player_died"]
-[connection signal="hit" from="Mob" to="Player" method="_on_hit"]
-[connection signal="hit" from="Mob2" to="Player" method="_on_hit"]

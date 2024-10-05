@@ -1,7 +1,5 @@
 extends CharacterBody2D
 
-signal hit(collider: Object)
-
 enum State { patrolling, watching, chasing }
 
 @export var movement_speed: float = 200.0
@@ -123,9 +121,9 @@ func _on_trigger_timer_timeout():
 
 
 func _on_gun_hit(collider: Object):
-	hit.emit(collider)
+	if collider.has_method("hit"):
+		collider.hit()
 
 
-func _on_hit(collider: Object):
-	if collider == self:
-		queue_free()
+func hit():
+	queue_free()

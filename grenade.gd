@@ -1,14 +1,6 @@
 extends RigidBody2D
 
-signal hit(collider: Object)
-
 var explosion_radius = 200
-
-func _ready():
-	var characters = get_tree().get_nodes_in_group("characters")
-
-	for character in characters:
-		connect("hit", character._on_hit)
 
 
 func _on_timer_timeout() -> void:
@@ -41,8 +33,9 @@ func explode() -> void:
 
 			var result = space_state.intersect_ray(query)
 
-			if result.has("collider") and result.collider == character:
-				hit.emit(character)
+			if result.has("collider") and result.collider == character and result.collider.has_method("hit"):
+				result.collider.hit()
+				
 
 
 func spawn_blast():

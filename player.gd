@@ -1,7 +1,5 @@
 extends CharacterBody2D
 
-signal hit(collider: Object)
-
 signal player_died()
 signal gun_changed()
 signal gun_shot()
@@ -72,21 +70,8 @@ func _process(_delta):
 
 
 func _on_gun_hit(collider: Object):
-	hit.emit(collider)
-
-
-func _on_hit(collider: Object) -> void:
-	if collider == self:
-		state = PlayerState.DEAD
-
-		$AnimationBody.play("death")
-		$AnimationLegs.hide()
-		$CollisionShape2D.disabled = true
-		$NavigationObstacle2D.avoidance_enabled = false
-		$LightOccluder2D.hide()
-		$Audio/AudioFootsteps.stop()
-		$Audio/AudioDeath.play()
-		$DeathTimer.start()
+	if collider.has_method("hit"):
+		collider.hit()
 
 
 func _on_death_timer_timeout() -> void:
@@ -214,3 +199,16 @@ func animate_legs():
 	else:
 		$AnimationLegs.play("idle")
 		$Audio/AudioFootsteps.stop()
+
+
+func hit():
+	state = PlayerState.DEAD
+
+	$AnimationBody.play("death")
+	$AnimationLegs.hide()
+	$CollisionShape2D.disabled = true
+	$NavigationObstacle2D.avoidance_enabled = false
+	$LightOccluder2D.hide()
+	$Audio/AudioFootsteps.stop()
+	$Audio/AudioDeath.play()
+	$DeathTimer.start()
