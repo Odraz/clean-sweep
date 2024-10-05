@@ -203,8 +203,8 @@ height = 40.0
 polygon = PackedVector2Array(14, -41, -4, -38, -17.3333, -30, -28, -18, -31.3333, -9.33333, -32.6667, 0, -30.6667, 10, -26, 20, -15.3333, 31.3333, -2, 38, 16, 42, -38.6667, 34, -37.3333, -36.6667)
 
 [node name="Player" type="CharacterBody2D" groups=["characters"]]
-collision_layer = 3
-collision_mask = 3
+collision_layer = 7
+collision_mask = 7
 script = ExtResource("1_svbte")
 metadata/_edit_group_ = true
 

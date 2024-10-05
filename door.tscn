@@ -1,0 +1,67 @@
+[gd_scene load_steps=9 format=3 uid="uid://ldt5qy1guwbr"]
+
+[ext_resource type="Script" path="res://door.gd" id="1_15poi"]
+[ext_resource type="Texture2D" uid="uid://dsp8yen0u2k7u" path="res://art/objects.png" id="1_dw101"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c1oik"]
+atlas = ExtResource("1_dw101")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oojym"]
+atlas = ExtResource("1_dw101")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w8ged"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c1oik")
+}],
+"loop": false,
+"name": &"broken",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oojym")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g7wr3"]
+radius = 60.0
+height = 150.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_efbm3"]
+size = Vector2(9, 78)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ym28u"]
+polygon = PackedVector2Array(-3, -82, 6, -82, 6, -4, -3, -4)
+
+[node name="Door" type="Marker2D"]
+script = ExtResource("1_15poi")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -43)
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_w8ged")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(0, -43)
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CapsuleShape2D_g7wr3")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(0, -43)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(1.5, 0)
+shape = SubResource("RectangleShape2D_efbm3")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_ym28u")

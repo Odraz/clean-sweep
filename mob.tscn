@@ -67,7 +67,7 @@ max_speed = 200.0
 [node name="Gun" parent="." instance=ExtResource("3_kwxxi")]
 
 [node name="TriggerTimer" type="Timer" parent="."]
-wait_time = 0.4
+wait_time = 0.3
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="hit" from="Gun" to="." method="_on_gun_hit"]

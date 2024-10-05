@@ -31,7 +31,8 @@ func actor_setup():
 	set_physics_process(true)
 	
 	# Now that the navigation map is no longer empty, set the movement target.
-	set_movement_target(movement_target_positions[current_movement_target_index].global_position)
+	if movement_target_positions.size() > 0:
+		set_movement_target(movement_target_positions[current_movement_target_index].global_position)
 
 
 func set_movement_target(movement_target: Vector2):
@@ -62,6 +63,9 @@ func _physics_process(_delta):
 		state = State.patrolling
 
 	$TriggerTimer.stop()
+
+	if movement_target_positions.size() == 0:
+		return
 
 	if navigation_agent.is_navigation_finished():
 		set_waypoint_randomly()

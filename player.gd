@@ -61,7 +61,7 @@ func _process(_delta):
 			init_throw_grenade()
 
 		if has_shot:
-			current_gun.shoot(get_global_mouse_position(), 500, $Crosshair.pos_x / 70 * PI / 20)
+			current_gun.shoot(get_global_mouse_position(), 1000, $Crosshair.pos_x / 70 * PI / 20)
 		
 		handle_gun_selection()
 
