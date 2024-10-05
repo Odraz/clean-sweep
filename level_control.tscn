@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwujuuxuhxlko"]
+
+[ext_resource type="Script" path="res://level_control.gd" id="1_rp20n"]
+
+[node name="LevelControl" type="Node"]
+script = ExtResource("1_rp20n")

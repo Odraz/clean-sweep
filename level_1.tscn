@@ -1,11 +1,11 @@
 [gd_scene load_steps=28 format=4 uid="uid://cwusv0ssvkm5c"]
 
+[ext_resource type="PackedScene" uid="uid://bwujuuxuhxlko" path="res://level_control.tscn" id="1_6py8t"]
 [ext_resource type="Texture2D" uid="uid://s5uxsp6dri4q" path="res://art/using_tilesets_kenney_abstract_platformer_tile_sheet.webp" id="1_i3ysn"]
-[ext_resource type="Script" path="res://level_1.gd" id="1_iw5ag"]
 [ext_resource type="Texture2D" uid="uid://cncm64ey8c4f3" path="res://art/top-down.png" id="2_gvojm"]
 [ext_resource type="PackedScene" uid="uid://cockkd0011ati" path="res://player.tscn" id="3_gu3t4"]
 [ext_resource type="PackedScene" uid="uid://dfi02hgcspv5o" path="res://mob.tscn" id="4_71p88"]
-[ext_resource type="Script" path="res://camera_player.gd" id="6_iw8cn"]
+[ext_resource type="PackedScene" uid="uid://dhfheyuh4e33o" path="res://player_camera.tscn" id="6_udvj2"]
 [ext_resource type="PackedScene" uid="uid://dxaeakdou4gy7" path="res://player_gui.tscn" id="7_jg2ut"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8glyp"]
@@ -460,7 +460,8 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(736, 80, 736, 512, 432,
 agent_radius = 15.0
 
 [node name="Level1" type="Node"]
-script = ExtResource("1_iw5ag")
+
+[node name="LevelControl" parent="." instance=ExtResource("1_6py8t")]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 position = Vector2(332, 217)
@@ -487,11 +488,6 @@ position = Vector2(688, 376)
 movement_speed = 150.0
 movement_target_positions = [NodePath("../Waypoints/Marker2D"), NodePath("../Waypoints/Marker2D2"), NodePath("../Waypoints/Marker2D3"), NodePath("../Waypoints/Marker2D4")]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-script = ExtResource("6_iw8cn")
-
-[node name="PlayerGUI" parent="Camera2D" instance=ExtResource("7_jg2ut")]
-
 [node name="Waypoints" type="Node" parent="."]
 
 [node name="Marker2D" type="Marker2D" parent="Waypoints"]
@@ -506,13 +502,14 @@ position = Vector2(72, 472)
 [node name="Marker2D4" type="Marker2D" parent="Waypoints"]
 position = Vector2(648, 472)
 
-[connection signal="grenade_thrown" from="Player" to="Camera2D/PlayerGUI" method="_on_player_grenade_thrown"]
-[connection signal="gun_changed" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_changed"]
-[connection signal="gun_reloaded" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_reloaded"]
-[connection signal="gun_shot" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_shot"]
-[connection signal="gun_started_reloading" from="Player" to="Camera2D/PlayerGUI" method="_on_player_gun_started_reloading"]
+[node name="Camera2D" parent="." node_paths=PackedStringArray("player") instance=ExtResource("6_udvj2")]
+player = NodePath("../Player")
+
+[node name="PlayerGUI" parent="." node_paths=PackedStringArray("player") instance=ExtResource("7_jg2ut")]
+player = NodePath("../Player")
+
 [connection signal="hit" from="Player" to="Mob" method="_on_hit"]
 [connection signal="hit" from="Player" to="Mob2" method="_on_hit"]
-[connection signal="player_died" from="Player" to="." method="_on_player_player_died"]
+[connection signal="player_died" from="Player" to="LevelControl" method="_on_player_player_died"]
 [connection signal="hit" from="Mob" to="Player" method="_on_hit"]
 [connection signal="hit" from="Mob2" to="Player" method="_on_hit"]

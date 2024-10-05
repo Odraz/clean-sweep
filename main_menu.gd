@@ -1,9 +1,10 @@
 extends CanvasLayer
 
+func _ready():
+	$StartButton.grab_focus()
+
 func _unhandled_input(event: InputEvent):
-	if event.is_action_pressed("action_submit"):
-		start_game()
-	elif event.is_action_pressed("action_cancel"):
+	if event.is_action_pressed("action_cancel"):
 		quit_game()
 
 
@@ -16,7 +17,7 @@ func _on_quit_button_pressed():
 
 
 func start_game():
-	get_tree().change_scene_to_file("res://level_1.tscn")
+	get_tree().change_scene_to_file("res://level_practice.tscn")
 
 
 func quit_game():

@@ -1,12 +1,13 @@
 extends CharacterBody2D
 
 signal hit(collider: Object)
+
 signal player_died()
-signal gun_changed(current_gun)
-signal gun_shot(current_gun)
-signal gun_started_reloading(current_gun)
-signal gun_reloaded(current_gun)
-signal grenade_thrown(grenade_count: int, grenades: int)
+signal gun_changed()
+signal gun_shot()
+signal gun_started_reloading()
+signal gun_reloaded()
+signal grenade_thrown()
 
 const GUN_ANIMATIONS = {
 	GunStats.GunType.HANDGUN: "handgun",
@@ -98,11 +99,11 @@ func _on_gun_reloaded():
 
 	state = PlayerState.DEFAULT
 
-	gun_reloaded.emit(current_gun)
+	gun_reloaded.emit()
 
 
 func _on_gun_shot() -> void:
-	gun_shot.emit(current_gun)
+	gun_shot.emit()
 
 
 func _on_animation_body_animation_finished():
@@ -170,7 +171,7 @@ func handle_gun_selection():
 	else:
 		return
 	
-	gun_changed.emit(current_gun)
+	gun_changed.emit()
 
 
 func reload():
@@ -178,7 +179,7 @@ func reload():
 
 	current_gun.reload()
 
-	gun_started_reloading.emit(current_gun)
+	gun_started_reloading.emit()
 
 	$AnimationBody.play("reload_" + GUN_ANIMATIONS[current_gun.type])
 
@@ -200,7 +201,7 @@ func throw_grenade():
 
 	grenades -= 1
 
-	grenade_thrown.emit(GRENADE_COUNT, grenades)
+	grenade_thrown.emit()
 
 
 func animate_legs():
