@@ -4,26 +4,29 @@ signal hit(collider: Object)
 signal shot()
 signal reloaded()
 
-@export var type: GunStats.GunType = GunStats.GunType.HANDGUN
+@export var type: GunSettings.Type = GunSettings.Type.HANDGUN
 
-@onready var magazine_size: int = GunStats.GUN_STATS[type][GunStats.GunStat.MAGAZINE_SIZE]
-@onready var magazine_count: int = GunStats.GUN_STATS[type][GunStats.GunStat.MAGAZINE_COUNT]
+@onready var precision_hip: float = GunSettings.STATS[type][GunSettings.Stat.PRECISION_HIP]
+@onready var precision_aim: float = GunSettings.STATS[type][GunSettings.Stat.PRECISION_AIM]
+@onready var gun_range: float = GunSettings.STATS[type][GunSettings.Stat.RANGE] * 1300
+@onready var recoil: float = GunSettings.STATS[type][GunSettings.Stat.RECOIL]
+@onready var magazine_size: int = GunSettings.STATS[type][GunSettings.Stat.MAGAZINE_SIZE]
+@onready var magazine_count: int = GunSettings.STATS[type][GunSettings.Stat.MAGAZINE_COUNT]
 @onready var ammo: int = magazine_size
 @onready var magazines: int = magazine_count
-@onready var single_shot_bullet_count: int = GunStats.GUN_STATS[type][GunStats.GunStat.SINGLE_SHOT_BULLET_COUNT]
-@onready var burst_shot_count: int = GunStats.GUN_STATS[type][GunStats.GunStat.BURST_SHOT_COUNT]
+@onready var single_shot_bullet_count: int = GunSettings.STATS[type][GunSettings.Stat.SINGLE_SHOT_BULLET_COUNT]
+@onready var burst_shot_count: int = GunSettings.STATS[type][GunSettings.Stat.BURST_SHOT_COUNT]
 
-@onready var particle_emitter: Resource = load("res://particle_emitter_bullet_impact.tscn")
+@onready var particle_emitter: Resource = preload("res://particle_emitter_bullet_impact.tscn")
 
 var direction: Vector2
-var gun_range: float
 var dispersion: float
 var end_position: Vector2
 
 var burst_shot_index: int = 0
 
 func _ready():
-	$ReloadTimer.wait_time = GunStats.GUN_STATS[type][GunStats.GunStat.RELOAD_TIME]
+	$ReloadTimer.wait_time = GunSettings.STATS[type][GunSettings.Stat.RELOAD_TIME]
 
 func _on_reload_timer_timeout():
 	if magazine_count <= 0:
@@ -49,7 +52,7 @@ func _on_burst_timer_timeout():
 		burst_shot_index = 0
 
 
-func shoot(_direction: Vector2, _gun_range: float, _dispersion: float):
+func shoot(_direction: Vector2, _dispersion: float):
 	if not $ReloadTimer.is_stopped() or not $BurstTimer.is_stopped():
 		return
 
@@ -61,7 +64,6 @@ func shoot(_direction: Vector2, _gun_range: float, _dispersion: float):
 	ammo -= 1
 
 	direction = _direction
-	gun_range = _gun_range
 	dispersion = _dispersion
 
 	for i in range(single_shot_bullet_count):
@@ -144,5 +146,5 @@ func spawn_impact_particles(result: Dictionary):
 
 
 func play_fire_animation():
-	$Muzzle.get_node("AnimatedSprite2D").play("fire_" + GunStats.GunType.keys()[type].to_lower())
+	$Muzzle.get_node("AnimatedSprite2D").play("fire_" + GunSettings.Type.keys()[type].to_lower())
 	$Muzzle.get_node("AnimatedSprite2D").play("default")

@@ -15,9 +15,9 @@ func _ready():
 
 func _on_player_gun_changed():
 	match player.current_gun.type:
-		GunStats.GunType.HANDGUN: $GunName.text = "Handgun"
-		GunStats.GunType.SHOTGUN: $GunName.text = "Shotgun"
-		GunStats.GunType.RIFLE: $GunName.text = "Rifle"
+		GunSettings.Type.HANDGUN: $GunName.text = "Handgun"
+		GunSettings.Type.SHOTGUN: $GunName.text = "Shotgun"
+		GunSettings.Type.RIFLE: $GunName.text = "Rifle"
 		_ : "Unknown"
 	
 	set_gun_ammo()
@@ -40,7 +40,7 @@ func _on_player_gun_shot():
 func _on_player_gun_started_reloading():
 	$ProgressBar.value = 0
 	$ProgressBar.visible = true
-	$ProgressBar.max_value = GunStats.GUN_STATS[player.current_gun.type][GunStats.GunStat.RELOAD_TIME]
+	$ProgressBar.max_value = GunSettings.STATS[player.current_gun.type][GunSettings.Stat.RELOAD_TIME]
 
 	$ProgressBar/Timer.start()
 

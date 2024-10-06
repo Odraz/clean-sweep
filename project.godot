@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GunStats="*res://gun_stats.gd"
+GunSettings="*res://gun_settings.gd"
 
 [display]
 

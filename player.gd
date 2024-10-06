@@ -7,12 +7,6 @@ signal gun_started_reloading()
 signal gun_reloaded()
 signal grenade_thrown()
 
-const GUN_ANIMATIONS = {
-	GunStats.GunType.HANDGUN: "handgun",
-	GunStats.GunType.SHOTGUN: "shotgun",
-	GunStats.GunType.RIFLE: "rifle",
-}
-
 enum PlayerState {
 	DEFAULT,
 	RELOADING,
@@ -20,53 +14,69 @@ enum PlayerState {
 	DEAD,
 }
 
-const GRENADE_COUNT: int = 3
+const GUN_ANIMATIONS = {
+	GunSettings.Type.HANDGUN: "handgun",
+	GunSettings.Type.SHOTGUN: "shotgun",
+	GunSettings.Type.RIFLE: "rifle",
+}
 
-@onready var current_gun: = $Guns/Handgun
+const GRENADE_SCENE: Resource = preload("res://grenade.tscn")
+const GRENADE_COUNT: int = 3
+const GRENADE_ORIGIN_OFFSET: int = 30
+const GRENADE_THROW_FORCE: int = 300
+
+const SPEED_WALK: float = 150
+const SPEED_RUN: float = 200
+const SPEED_AIM_MODIFIER: float = 0.5
+const FOOTSTEP_SPEED_MODIFIER: float = 1.5
 
 var state: PlayerState = PlayerState.DEFAULT
-
-var speed_walk: float = 150
-var speed_run: float = 200
-var speed_aim_modifier: float = 0.5
 var grenades: int = GRENADE_COUNT
 
-var screen_size
+@onready var screen_size: = get_viewport_rect().size
+@onready var current_gun: = $Guns/Handgun
 
-func _ready():
-	screen_size = get_viewport_rect().size
 
 func _physics_process(delta):
-	if state == PlayerState.DEAD:
+	if is_dead():
 		return
 
 	move(delta)
 
+
 func _process(_delta):	
-	if state == PlayerState.DEAD:
+	if is_dead():
 		return
 
-	turn()
-
-	var has_shot = Input.is_action_just_pressed("gun_shoot")
+	look_at_mouse_position()
 
 	if state == PlayerState.DEFAULT:
 		$AnimationBody.play("idle_" + GUN_ANIMATIONS[current_gun.type])
 	
-		if Input.is_action_just_pressed("gun_reload") and current_gun.magazines > 0:
+	animate_legs()
+
+	update_crosshair(false)
+
+
+func _input(event):
+	if is_dead():
+		return
+	
+	var has_shot = event.is_action_pressed("gun_shoot")
+
+	if state == PlayerState.DEFAULT:
+		if event.is_action_pressed("gun_reload") and current_gun.magazines > 0:
 			reload()
 
-		if Input.is_action_just_released("grenade_throw") and grenades > 0:
+		if event.is_action_released("grenade_throw") and grenades > 0:
 			init_throw_grenade()
 
 		if has_shot:
-			current_gun.shoot(get_global_mouse_position(), 1000, $Crosshair.pos_x / 70 * PI / 20)
+			current_gun.shoot(get_global_mouse_position(), $Crosshair.pos_x / 70 * PI / 20)
 		
-		handle_gun_selection()
+		handle_gun_selection(event)
 
 	update_crosshair(has_shot)
-
-	animate_legs()
 
 
 func _on_gun_hit(collider: Object):
@@ -79,10 +89,10 @@ func _on_death_timer_timeout() -> void:
 
 
 func _on_gun_reloaded():
-	if state == PlayerState.DEAD:
+	if is_dead():
 		return
 
-	state = PlayerState.DEFAULT
+	set_state(PlayerState.DEFAULT)
 
 	gun_reloaded.emit()
 
@@ -92,15 +102,19 @@ func _on_gun_shot() -> void:
 
 
 func _on_animation_body_animation_finished():
-	if state == PlayerState.DEAD:
+	if is_dead():
 		return
 
 	if $AnimationBody.animation  == "reload_" + GUN_ANIMATIONS[current_gun.type]:
-		state = PlayerState.DEFAULT
+		set_state(PlayerState.DEFAULT)
 	elif $AnimationBody.animation == "throw_grenade":
-		state = PlayerState.DEFAULT
+		set_state(PlayerState.DEFAULT)
 		throw_grenade()
 	
+
+func is_dead():
+	return state == PlayerState.DEAD
+
 
 func move(_delta: float):	
 	var input_velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -109,22 +123,9 @@ func move(_delta: float):
 
 	scale_footsteps_pitch(is_running)
 
-	velocity = \
-		input_velocity \
-		* (speed_run if is_running else speed_walk) \
-		* (speed_aim_modifier if is_aiming else 1.0)
+	velocity = calculate_velocity(input_velocity, is_running, is_aiming)
 
 	move_and_slide()
-	
-
-func turn():	
-	look_at(get_global_mouse_position())
-
-
-func update_crosshair(has_shot: bool):
-	var new_crosshair_pos_x = calculate_crosshair_pos_x(has_shot)
-
-	$Crosshair.set_pos_x(new_crosshair_pos_x, has_shot)
 
 
 func scale_footsteps_pitch(is_running: bool):
@@ -134,24 +135,40 @@ func scale_footsteps_pitch(is_running: bool):
 		$Audio/AudioFootsteps.pitch_scale = 0.8
 
 
-func calculate_crosshair_pos_x(has_shot: bool) -> float:
+func calculate_velocity(input_velocity: Vector2, is_running: bool, is_aiming: bool):
+	return input_velocity \
+		* (SPEED_RUN if is_running else SPEED_WALK) \
+		* (SPEED_AIM_MODIFIER if is_aiming else 1.0)
+
+
+func look_at_mouse_position():	
+	look_at(get_global_mouse_position())
+
+
+func update_crosshair(has_shot: bool):
+	var new_crosshair_pos_x = calculate_crosshair_pos_x(has_shot)
+
+	$Crosshair.set_pos_x(new_crosshair_pos_x, has_shot)
+
+
+func calculate_crosshair_pos_x(has_shot: bool):
 	return $Crosshair.CURSOR_DEFAULT_POS_X \
-			- 10 * (GunStats.GUN_STATS[current_gun.type][GunStats.GunStat.PRECISION_HIP] - 1) \
-			+ 20 * pow (velocity.length() / speed_run, 3) \
-			- (5 * GunStats.GUN_STATS[current_gun.type][GunStats.GunStat.PRECISION_AIM] if Input.is_action_pressed("gun_aim") else 0.0) \
-			+ (40 * GunStats.GUN_STATS[current_gun.type][GunStats.GunStat.RECOIL] if has_shot else 0.0)
+			- 10 * (current_gun.precision_hip - 1) \
+			+ 20 * pow (velocity.length() / SPEED_RUN, 3) \
+			- (5 * current_gun.precision_aim if Input.is_action_pressed("gun_aim") else 0.0) \
+			+ (40 * current_gun.recoil if has_shot else 0.0)
 
 
-func handle_gun_selection():
-	if Input.is_action_just_pressed("gun_select_1"):
+func handle_gun_selection(event):
+	if event.is_action_pressed("gun_select_1"):
 		current_gun = $Guns/Handgun
-	elif Input.is_action_just_pressed("gun_select_2"):
+	elif event.is_action_pressed("gun_select_2"):
 		current_gun = $Guns/Shotgun
-	elif Input.is_action_just_pressed("gun_select_3"):
+	elif event.is_action_pressed("gun_select_3"):
 		current_gun = $Guns/Rifle
-	elif Input.is_action_just_pressed("gun_select_next"):
+	elif event.is_action_pressed("gun_select_next"):
 		current_gun = $Guns.get_child((current_gun.get_index() + 1) % $Guns.get_child_count())
-	elif Input.is_action_just_pressed("gun_select_previous"):
+	elif event.is_action_pressed("gun_select_previous"):
 		current_gun = $Guns.get_child((current_gun.get_index() - 1 + $Guns.get_child_count()) % $Guns.get_child_count())
 	else:
 		return
@@ -160,7 +177,7 @@ func handle_gun_selection():
 
 
 func reload():
-	state = PlayerState.RELOADING
+	set_state(PlayerState.RELOADING)
 
 	current_gun.reload()
 
@@ -170,19 +187,18 @@ func reload():
 
 
 func init_throw_grenade():
-	state = PlayerState.THROWING_GRENADE
+	set_state(PlayerState.THROWING_GRENADE)
 
 	$AnimationBody.play("throw_grenade")
 
 
 func throw_grenade():		
-	var grenade_scene = load("res://grenade.tscn")
-	var grenade = grenade_scene.instantiate()
+	var grenade = GRENADE_SCENE.instantiate()
 
 	get_tree().current_scene.add_child(grenade)
 
-	grenade.global_position = global_position + Vector2.RIGHT.rotated(rotation) * 30
-	grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * 300, global_position)
+	grenade.global_position = global_position + Vector2.RIGHT.rotated(rotation) * GRENADE_ORIGIN_OFFSET
+	grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * GRENADE_THROW_FORCE, global_position)
 
 	grenades -= 1
 
@@ -191,7 +207,7 @@ func throw_grenade():
 
 func animate_legs():
 	if velocity.length() > 0:
-		$AnimationLegs.speed_scale = 1.5 * velocity.length() / speed_run
+		$AnimationLegs.speed_scale = FOOTSTEP_SPEED_MODIFIER * velocity.length() / SPEED_RUN
 		$AnimationLegs.play("move")
 
 		if not $Audio/AudioFootsteps.is_playing():
@@ -201,8 +217,15 @@ func animate_legs():
 		$Audio/AudioFootsteps.stop()
 
 
+func set_state(new_state: PlayerState):
+	if state == PlayerState.DEAD:
+		push_warning("Player is dead, cannot change state")
+
+	state = new_state
+
+
 func hit():
-	state = PlayerState.DEAD
+	set_state(PlayerState.DEAD)
 
 	$AnimationBody.play("death")
 	$AnimationLegs.hide()
