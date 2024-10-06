@@ -34,9 +34,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ydujd"]
 size = Vector2(0.0954696, 989.12)
 
-[node name="Window" type="Area2D"]
-collision_layer = 2
-collision_mask = 2
+[node name="Window" type="Area2D" groups=["destructibles"]]
+collision_layer = 10
+collision_mask = 10
 script = ExtResource("1_8snkq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -52,3 +52,4 @@ shape = SubResource("RectangleShape2D_ydujd")
 stream = ExtResource("3_wi5xn")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://5r6yqxnwb2hr"]
+[gd_scene load_steps=8 format=3 uid="uid://5r6yqxnwb2hr"]
 
 [ext_resource type="Texture2D" uid="uid://d2qgdgpajw773" path="res://art/grenade.png" id="1_16iyh"]
 [ext_resource type="Script" path="res://grenade.gd" id="1_e570e"]
@@ -13,6 +13,10 @@ height = 4.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dd3jb"]
 light_mode = 2
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bl1n4"]
+radius = 1.0
+height = 4.0
 
 [node name="Grenade" type="RigidBody2D"]
 mass = 0.001
@@ -41,6 +45,16 @@ autostart = true
 wait_time = 5.0
 one_shot = true
 autostart = true
+
+[node name="Area2D" type="Area2D" parent="."]
+editor_description = "For collision detection with windows."
+collision_layer = 2
+collision_mask = 2
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -1)
+shape = SubResource("CapsuleShape2D_bl1n4")
 
 [connection signal="timeout" from="ExplosionTimer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="QueueFreeTimer" to="." method="_on_queue_free_timer_timeout"]

@@ -6,6 +6,12 @@ signal reloaded()
 
 @export var type: GunSettings.Type = GunSettings.Type.HANDGUN
 
+var direction: Vector2
+var dispersion: float
+var end_position: Vector2
+
+var burst_shot_index: int = 0
+
 @onready var precision_hip: float = GunSettings.STATS[type][GunSettings.Stat.PRECISION_HIP]
 @onready var precision_aim: float = GunSettings.STATS[type][GunSettings.Stat.PRECISION_AIM]
 @onready var gun_range: float = GunSettings.STATS[type][GunSettings.Stat.RANGE] * 1300
@@ -18,12 +24,7 @@ signal reloaded()
 @onready var burst_shot_count: int = GunSettings.STATS[type][GunSettings.Stat.BURST_SHOT_COUNT]
 
 @onready var particle_emitter: Resource = preload("res://particle_emitter_bullet_impact.tscn")
-
-var direction: Vector2
-var dispersion: float
-var end_position: Vector2
-
-var burst_shot_index: int = 0
+@onready var bullet_scene: Resource = preload("res://bullet.tscn")
 
 func _ready():
 	$ReloadTimer.wait_time = GunSettings.STATS[type][GunSettings.Stat.RELOAD_TIME]
@@ -105,8 +106,8 @@ func shoot_once():
 
 	shot.emit()
 
+
 func spawn_bullet(start_position: Vector2, result: Dictionary):
-	var bullet_scene = load("res://bullet.tscn")
 	var bullet = bullet_scene.instantiate()
 
 	var bullet_start_position = start_position + (direction - start_position).normalized() * 10

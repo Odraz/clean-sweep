@@ -9,8 +9,6 @@ signal grenade_thrown()
 
 enum PlayerState {
 	DEFAULT,
-	RELOADING,
-	THROWING_GRENADE,
 	DEAD,
 }
 
@@ -50,9 +48,6 @@ func _process(_delta):
 
 	look_at_mouse_position()
 
-	if state == PlayerState.DEFAULT:
-		$AnimationBody.play("idle_" + GUN_ANIMATIONS[current_gun.type])
-	
 	animate_legs()
 
 	update_crosshair(false)
@@ -64,7 +59,7 @@ func _input(event):
 	
 	var has_shot = event.is_action_pressed("gun_shoot")
 
-	if state == PlayerState.DEFAULT:
+	if is_idle():
 		if event.is_action_pressed("gun_reload") and current_gun.magazines > 0:
 			reload()
 
@@ -92,7 +87,7 @@ func _on_gun_reloaded():
 	if is_dead():
 		return
 
-	set_state(PlayerState.DEFAULT)
+	set_idle()
 
 	gun_reloaded.emit()
 
@@ -105,15 +100,17 @@ func _on_animation_body_animation_finished():
 	if is_dead():
 		return
 
-	if $AnimationBody.animation  == "reload_" + GUN_ANIMATIONS[current_gun.type]:
-		set_state(PlayerState.DEFAULT)
-	elif $AnimationBody.animation == "throw_grenade":
-		set_state(PlayerState.DEFAULT)
+	if $AnimationBody.animation == "throw_grenade":
+		set_idle()
 		throw_grenade()
 	
 
 func is_dead():
 	return state == PlayerState.DEAD
+
+
+func is_idle():
+	return $AnimationBody.animation.begins_with("idle")
 
 
 func move(_delta: float):	
@@ -173,12 +170,12 @@ func handle_gun_selection(event):
 	else:
 		return
 	
+	set_idle()
+	
 	gun_changed.emit()
 
 
 func reload():
-	set_state(PlayerState.RELOADING)
-
 	current_gun.reload()
 
 	gun_started_reloading.emit()
@@ -187,8 +184,6 @@ func reload():
 
 
 func init_throw_grenade():
-	set_state(PlayerState.THROWING_GRENADE)
-
 	$AnimationBody.play("throw_grenade")
 
 
@@ -215,6 +210,10 @@ func animate_legs():
 	else:
 		$AnimationLegs.play("idle")
 		$Audio/AudioFootsteps.stop()
+
+
+func set_idle():
+	$AnimationBody.play("idle_" + GUN_ANIMATIONS[current_gun.type])
 
 
 func set_state(new_state: PlayerState):
