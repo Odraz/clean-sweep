@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://d2qgdgpajw773" path="res://art/grenade.png" id="1_16iyh"]
 [ext_resource type="Script" path="res://grenade.gd" id="1_e570e"]
-[ext_resource type="AudioStream" uid="uid://bc1djmcj18sw0" path="res://art/grenade_explosion.mp3" id="2_7ormn"]
+[ext_resource type="AudioStream" uid="uid://c7g7hkuy0bfta" path="res://art/grenade_explosion.wav" id="3_pfvlj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pj1un"]
 bounce = 0.2
@@ -33,7 +33,7 @@ material = SubResource("CanvasItemMaterial_dd3jb")
 texture = ExtResource("1_16iyh")
 
 [node name="AudioExplosion" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("2_7ormn")
+stream = ExtResource("3_pfvlj")
 volume_db = -5.0
 
 [node name="ExplosionTimer" type="Timer" parent="."]

@@ -13,7 +13,7 @@ func brake():
     set_deferred("monitorable", false)
     set_deferred("monitoring", false)
 
-    $CollisionShape2D.disabled = true
+    $CollisionShape2D.set_deferred("disabled", true)
 
     $AnimatedSprite2D.play("broken")
     $AudioStreamPlayer2D.play()
