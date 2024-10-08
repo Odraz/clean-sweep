@@ -4,9 +4,10 @@ signal hit(collider: Object)
 signal shot()
 signal reloaded()
 
+const BULLET_OFFSET: int = 10
+
 @export var type: GunSettings.Type = GunSettings.Type.HANDGUN
 
-var direction: Vector2
 var dispersion: float
 var end_position: Vector2
 
@@ -22,6 +23,7 @@ var burst_shot_index: int = 0
 @onready var magazines: int = magazine_count
 @onready var single_shot_bullet_count: int = GunSettings.STATS[type][GunSettings.Stat.SINGLE_SHOT_BULLET_COUNT]
 @onready var burst_shot_count: int = GunSettings.STATS[type][GunSettings.Stat.BURST_SHOT_COUNT]
+@onready var muzzle_distance: float = position.distance_to($Muzzle.position)
 
 @onready var particle_emitter: Resource = preload("res://particle_emitter_bullet_impact.tscn")
 @onready var bullet_scene: Resource = preload("res://bullet.tscn")
@@ -53,18 +55,16 @@ func _on_burst_timer_timeout():
 		burst_shot_index = 0
 
 
-func shoot(_direction: Vector2, _dispersion: float):
+func shoot(_dispersion: float):
 	if not $ReloadTimer.is_stopped() or not $BurstTimer.is_stopped():
 		return
 
 	if ammo <= 0:
 		$AudioEmpty.play()
-
 		return
 	
 	ammo -= 1
 
-	direction = _direction
 	dispersion = _dispersion
 
 	for i in range(single_shot_bullet_count):
@@ -79,8 +79,7 @@ func shoot(_direction: Vector2, _dispersion: float):
 func shoot_once():
 	var space_state = get_world_2d().direct_space_state
 
-	# Get the start position of the ray which is the gun's global position.
-	var start_position = $Muzzle.global_position
+	var start_position = global_position
 	end_position = get_shoot_ray_end_position(start_position)
 	var diff = end_position - start_position
 
@@ -100,18 +99,24 @@ func shoot_once():
 	else:
 		result = {}
 
-	spawn_bullet(start_position, result)
+	spawn_bullet(result)
 
 	play_fire_animation()
 
 	shot.emit()
 
 
-func spawn_bullet(start_position: Vector2, result: Dictionary):
+func spawn_bullet(result: Dictionary):
+	var bullet_end_position = result.position if result else end_position
+
+	if global_position.distance_to(bullet_end_position) < muzzle_distance:
+		return
+
 	var bullet = bullet_scene.instantiate()
 
-	var bullet_start_position = start_position + (direction - start_position).normalized() * 10
-	var bullet_end_position = result.position if result else end_position
+	var muzzle_position = $Muzzle.global_position
+
+	var bullet_start_position = muzzle_position + ($Target.global_position - muzzle_position).normalized() * BULLET_OFFSET
 
 	bullet.init(bullet_start_position, bullet_end_position)
 
@@ -119,7 +124,7 @@ func spawn_bullet(start_position: Vector2, result: Dictionary):
 
 
 func get_shoot_ray_end_position(start_position: Vector2) -> Vector2:
-	return start_position + (direction - start_position).normalized() * gun_range
+	return start_position + ($Target.global_position - start_position).normalized() * gun_range
 	
 
 func play_audio():

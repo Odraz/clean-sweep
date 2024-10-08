@@ -58,6 +58,8 @@ func _process(delta):
 	if is_charging_grenade():
 		grenade_throw_force = min(grenade_throw_force + GRENADE_THROW_FORCE_MAX / GRENADE_CHARGE_TIME * delta, GRENADE_THROW_FORCE_MAX)
 
+	current_gun.get_node("Target").global_position = get_global_mouse_position()
+
 
 func _input(event):
 	if is_dead():
@@ -73,7 +75,7 @@ func _input(event):
 			charge_grenade()
 
 		if has_shot:
-			current_gun.shoot(get_global_mouse_position(), $Crosshair.pos_x / 70 * PI / 20)
+			current_gun.shoot($Crosshair.pos_x / 70 * PI / 20)
 		
 		handle_gun_selection(event)
 	elif is_charging_grenade():
@@ -249,7 +251,7 @@ func hit():
 	$AnimationLegs.hide()
 	$CollisionShape2D.disabled = true
 	$NavigationObstacle2D.avoidance_enabled = false
-	$LightOccluder2D.hide()
+	$LightFieldOfView.hide()
 	$Audio/AudioFootsteps.stop()
 	$Audio/AudioDeath.play()
 	$DeathTimer.start()

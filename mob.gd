@@ -23,6 +23,10 @@ func _ready():
 	call_deferred("actor_setup")
 
 
+func _process(_delta: float):
+	$Gun.get_node("Target").global_position = player.global_position
+
+
 func actor_setup():
 	# Wait for the first physics frame so the NavigationServer can sync.
 	await get_tree().physics_frame
@@ -117,7 +121,7 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2):
 
 
 func _on_trigger_timer_timeout():
-	$Gun.shoot(player.global_position, PI / 10)
+	$Gun.shoot(PI / 10)
 
 
 func _on_gun_hit(collider: Object):

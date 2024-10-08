@@ -1,7 +1,8 @@
-[gd_scene load_steps=32 format=3 uid="uid://cockkd0011ati"]
+[gd_scene load_steps=33 format=3 uid="uid://cockkd0011ati"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_svbte"]
 [ext_resource type="Texture2D" uid="uid://6fcqgfb0vlwh" path="res://art/soldier_sheet.png" id="3_nci1e"]
+[ext_resource type="Texture2D" uid="uid://dtjjep80s3cuk" path="res://art/field_of_view.png" id="3_wgl4p"]
 [ext_resource type="Texture2D" uid="uid://c3vn877pwqbcg" path="res://art/2d_lights_and_shadows_neutral_point_light.webp" id="5_tuqut"]
 [ext_resource type="PackedScene" uid="uid://8heg8ep15o5d" path="res://gun.tscn" id="6_n2gmc"]
 [ext_resource type="AudioStream" uid="uid://5754yqas4nxc" path="res://art/player_footstep.wav" id="7_cg8of"]
@@ -9,6 +10,9 @@
 [ext_resource type="AudioStream" uid="uid://bpqi3xio2xntf" path="res://art/player_death.wav" id="8_lt0s3"]
 [ext_resource type="AudioStream" uid="uid://dug8idgj1y43o" path="res://art/shotgun_fire.mp3" id="8_wmh5j"]
 [ext_resource type="AudioStream" uid="uid://du23p3esgt877" path="res://art/rifle_fire.mp3" id="9_os5fy"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_81ukv"]
+light_mode = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c3nv1"]
 atlas = ExtResource("3_nci1e")
@@ -204,9 +208,6 @@ animations = [{
 radius = 20.0
 height = 40.0
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_pnjyr"]
-polygon = PackedVector2Array(14, -41, -4, -38, -17.3333, -30, -28, -18, -31.3333, -9.33333, -32.6667, 0, -30.6667, 10, -26, 20, -15.3333, 31.3333, -2, 38, 16, 42, -38.6667, 34, -37.3333, -36.6667)
-
 [node name="Player" type="CharacterBody2D" groups=["characters"]]
 collision_layer = 7
 collision_mask = 7
@@ -214,6 +215,8 @@ script = ExtResource("1_svbte")
 metadata/_edit_group_ = true
 
 [node name="AnimationLegs" type="AnimatedSprite2D" parent="."]
+light_mask = 512
+material = SubResource("CanvasItemMaterial_81ukv")
 position = Vector2(10, 0)
 rotation = 1.5708
 scale = Vector2(3, 3)
@@ -222,6 +225,7 @@ animation = &"idle"
 
 [node name="AnimationBody" type="AnimatedSprite2D" parent="."]
 light_mask = 512
+material = SubResource("CanvasItemMaterial_81ukv")
 position = Vector2(17, 2.84217e-14)
 rotation = 1.5708
 scale = Vector2(3, 3)
@@ -232,18 +236,20 @@ animation = &"idle_handgun"
 position = Vector2(10, 0)
 shape = SubResource("CapsuleShape2D_mtobe")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="LightFieldOfView" type="PointLight2D" parent="."]
 rotation = 1.5708
 energy = 0.5
 shadow_enabled = true
-shadow_item_cull_mask = 513
-texture = ExtResource("5_tuqut")
-texture_scale = 10.0
+texture = ExtResource("3_wgl4p")
+offset = Vector2(0, -700)
+texture_scale = 6.0
 
-[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
-scale = Vector2(1.5, 1.5)
-occluder = SubResource("OccluderPolygon2D_pnjyr")
-occluder_light_mask = 512
+[node name="LightPlayerModel" type="PointLight2D" parent="."]
+editor_description = "Only that part of the model that is lightened by this light (with only alpha color) is visible."
+color = Color(1, 1, 1, 0)
+range_item_cull_mask = 512
+shadow_enabled = true
+texture = ExtResource("5_tuqut")
 
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
 radius = 10.0

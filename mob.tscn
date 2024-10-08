@@ -66,9 +66,14 @@ max_speed = 200.0
 
 [node name="Gun" parent="." instance=ExtResource("3_kwxxi")]
 
+[node name="AnimatedSprite2D" parent="Gun/Muzzle" index="0"]
+position = Vector2(28, 0)
+
 [node name="TriggerTimer" type="Timer" parent="."]
 wait_time = 0.3
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="hit" from="Gun" to="." method="_on_gun_hit"]
 [connection signal="timeout" from="TriggerTimer" to="." method="_on_trigger_timer_timeout"]
+
+[editable path="Gun"]
