@@ -35,6 +35,7 @@ texture = ExtResource("1_16iyh")
 [node name="AudioExplosion" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_pfvlj")
 volume_db = -5.0
+area_mask = 2147483648
 
 [node name="ExplosionTimer" type="Timer" parent="."]
 wait_time = 2.0

@@ -21,7 +21,9 @@ const GUN_ANIMATIONS = {
 const GRENADE_SCENE: Resource = preload("res://grenade.tscn")
 const GRENADE_COUNT: int = 3
 const GRENADE_ORIGIN_OFFSET: int = 30
-const GRENADE_THROW_FORCE: int = 300
+const GRENADE_THROW_FORCE_MIN: int = 50
+const GRENADE_THROW_FORCE_MAX: int = 500
+const GRENADE_CHARGE_TIME: float = 1.0
 
 const SPEED_WALK: float = 150
 const SPEED_RUN: float = 200
@@ -30,6 +32,7 @@ const FOOTSTEP_SPEED_MODIFIER: float = 1.5
 
 var state: PlayerState = PlayerState.DEFAULT
 var grenades: int = GRENADE_COUNT
+var grenade_throw_force: int = GRENADE_THROW_FORCE_MIN
 
 @onready var screen_size: = get_viewport_rect().size
 @onready var current_gun: = $Guns/Handgun
@@ -42,7 +45,7 @@ func _physics_process(delta):
 	move(delta)
 
 
-func _process(_delta):	
+func _process(delta):	
 	if is_dead():
 		return
 
@@ -51,6 +54,9 @@ func _process(_delta):
 	animate_legs()
 
 	update_crosshair(false)
+
+	if is_charging_grenade():
+		grenade_throw_force = min(grenade_throw_force + GRENADE_THROW_FORCE_MAX / GRENADE_CHARGE_TIME * delta, GRENADE_THROW_FORCE_MAX)
 
 
 func _input(event):
@@ -62,14 +68,18 @@ func _input(event):
 	if is_idle():
 		if event.is_action_pressed("gun_reload") and current_gun.magazines > 0:
 			reload()
-
-		if event.is_action_released("grenade_throw") and grenades > 0:
-			init_throw_grenade()
+		
+		if event.is_action_pressed("grenade_throw") and grenades > 0:
+			charge_grenade()
 
 		if has_shot:
 			current_gun.shoot(get_global_mouse_position(), $Crosshair.pos_x / 70 * PI / 20)
 		
 		handle_gun_selection(event)
+	elif is_charging_grenade():
+		if event.is_action_released("grenade_throw"):
+			init_throw_grenade()
+
 
 	update_crosshair(has_shot)
 
@@ -111,6 +121,10 @@ func is_dead():
 
 func is_idle():
 	return $AnimationBody.animation.begins_with("idle")
+
+
+func is_charging_grenade():
+	return $AnimationBody.animation == "charge_grenade"
 
 
 func move(_delta: float):	
@@ -183,6 +197,10 @@ func reload():
 	$AnimationBody.play("reload_" + GUN_ANIMATIONS[current_gun.type])
 
 
+func charge_grenade():
+	$AnimationBody.play("charge_grenade")
+
+
 func init_throw_grenade():
 	$AnimationBody.play("throw_grenade")
 
@@ -193,9 +211,10 @@ func throw_grenade():
 	get_tree().current_scene.add_child(grenade)
 
 	grenade.global_position = global_position + Vector2.RIGHT.rotated(rotation) * GRENADE_ORIGIN_OFFSET
-	grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * GRENADE_THROW_FORCE, global_position)
+	grenade.apply_impulse(Vector2.RIGHT.rotated(rotation) * grenade_throw_force, global_position)
 
 	grenades -= 1
+	grenade_throw_force = GRENADE_THROW_FORCE_MIN
 
 	grenade_thrown.emit()
 

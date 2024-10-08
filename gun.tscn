@@ -67,13 +67,16 @@ script = ExtResource("1_xymik")
 
 [node name="AudioFire" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_04lqr")
+area_mask = 2147483648
 
 [node name="AudioEmpty" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_ppuuq")
+area_mask = 2147483648
 
 [node name="AudioReload" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_mxibw")
 volume_db = 5.0
+area_mask = 2147483648
 
 [node name="ReloadTimer" type="Timer" parent="."]
 

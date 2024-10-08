@@ -2,7 +2,9 @@
 
 [sub_resource type="AudioEffectReverb" id="AudioEffectReverb_wjqeq"]
 resource_name = "Reverb"
-room_size = 0.1
+predelay_msec = 50.0
+room_size = 0.05
+damping = 0.1
 
 [resource]
 bus/1/name = &"Corridors"

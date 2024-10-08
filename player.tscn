@@ -54,6 +54,14 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_y80xc"]
+atlas = ExtResource("3_nci1e")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xd8h1"]
+atlas = ExtResource("3_nci1e")
+region = Rect2(96, 64, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_l2rhd"]
 atlas = ExtResource("3_nci1e")
 region = Rect2(32, 96, 32, 32)
@@ -94,24 +102,27 @@ region = Rect2(96, 0, 32, 32)
 atlas = ExtResource("3_nci1e")
 region = Rect2(96, 32, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ulsj2"]
-atlas = ExtResource("3_nci1e")
-region = Rect2(64, 64, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rekb1"]
-atlas = ExtResource("3_nci1e")
-region = Rect2(96, 64, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_usfa5"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_7e0uy"]
 atlas = ExtResource("3_nci1e")
 region = Rect2(128, 64, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_yxmnp"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_awl1o"]
 atlas = ExtResource("3_nci1e")
 region = Rect2(0, 96, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_erwmi"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y80xc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xd8h1")
+}],
+"loop": false,
+"name": &"charge_grenade",
+"speed": 15.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_l2rhd")
@@ -179,16 +190,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ulsj2")
+"texture": SubResource("AtlasTexture_7e0uy")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_rekb1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_usfa5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yxmnp")
+"texture": SubResource("AtlasTexture_awl1o")
 }],
 "loop": false,
 "name": &"throw_grenade",
@@ -255,10 +260,12 @@ one_shot = true
 stream = ExtResource("7_cg8of")
 volume_db = -5.0
 pitch_scale = 0.8
+area_mask = 2147483648
 
 [node name="AudioDeath" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource("8_lt0s3")
 volume_db = -4.0
+area_mask = 2147483648
 
 [node name="Guns" type="Node2D" parent="."]
 

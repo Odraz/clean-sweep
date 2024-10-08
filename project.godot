@@ -23,6 +23,7 @@ GunSettings="*res://gun_settings.gd"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1081
+window/size/mode=3
 
 [global_group]
 
@@ -128,3 +129,4 @@ door_close={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)
