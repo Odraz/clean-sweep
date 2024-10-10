@@ -12,11 +12,6 @@ var current_movement_target_index: int = 0
 var state: State = State.patrolling
 
 func _ready():
-	# These values need to be adjusted for the actor's speed
-	# and the navigation layout.
-	navigation_agent.path_desired_distance = 4.0
-	navigation_agent.target_desired_distance = 4.0
-
 	set_physics_process(false)
 	
 	# Make sure to not await during _ready.
@@ -102,7 +97,7 @@ func is_player_in_light_of_sight() -> bool:
 	var direction_to_player = position.direction_to(player.position)
 	var front_facing_vector = transform.x.normalized()
 
-	if direction_to_player.dot(front_facing_vector) < 0.5 or position.distance_to(player.position) > 380:
+	if direction_to_player.dot(front_facing_vector) < 0.5 or position.distance_to(player.position) > 500:
 		return false
 
 	var space_state = get_world_2d().direct_space_state
@@ -122,11 +117,6 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2):
 
 func _on_trigger_timer_timeout():
 	$Gun.shoot(PI / 10)
-
-
-func _on_gun_hit(collider: Object):
-	if collider.has_method("hit"):
-		collider.hit()
 
 
 func hit():

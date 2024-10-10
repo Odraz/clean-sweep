@@ -73,7 +73,6 @@ position = Vector2(28, 0)
 wait_time = 0.3
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
-[connection signal="hit" from="Gun" to="." method="_on_gun_hit"]
 [connection signal="timeout" from="TriggerTimer" to="." method="_on_trigger_timer_timeout"]
 
 [editable path="Gun"]

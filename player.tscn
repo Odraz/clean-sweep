@@ -301,13 +301,10 @@ position = Vector2(64, 4)
 
 [connection signal="animation_finished" from="AnimationBody" to="." method="_on_animation_body_animation_finished"]
 [connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
-[connection signal="hit" from="Guns/Handgun" to="." method="_on_gun_hit"]
 [connection signal="reloaded" from="Guns/Handgun" to="." method="_on_gun_reloaded"]
 [connection signal="shot" from="Guns/Handgun" to="." method="_on_gun_shot"]
-[connection signal="hit" from="Guns/Shotgun" to="." method="_on_gun_hit"]
 [connection signal="reloaded" from="Guns/Shotgun" to="." method="_on_gun_reloaded"]
 [connection signal="shot" from="Guns/Shotgun" to="." method="_on_gun_shot"]
-[connection signal="hit" from="Guns/Rifle" to="." method="_on_gun_hit"]
 [connection signal="reloaded" from="Guns/Rifle" to="." method="_on_gun_reloaded"]
 [connection signal="shot" from="Guns/Rifle" to="." method="_on_gun_shot"]
 

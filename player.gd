@@ -86,11 +86,6 @@ func _input(event):
 	update_crosshair(has_shot)
 
 
-func _on_gun_hit(collider: Object):
-	if collider.has_method("hit"):
-		collider.hit()
-
-
 func _on_death_timer_timeout() -> void:
 	player_died.emit()
 

@@ -1,6 +1,5 @@
 extends Node2D
 
-signal hit(collider: Object)
 signal shot()
 signal reloaded()
 
@@ -93,7 +92,8 @@ func shoot_once():
 	var result = space_state.intersect_ray(query)
 
 	if result and result.has("collider"):
-		hit.emit(result.collider)
+		if result.collider.has_method("hit"):
+			result.collider.hit()
 
 		spawn_impact_particles(result)
 	else:
