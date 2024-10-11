@@ -77,10 +77,15 @@ wait_time = 0.3
 wait_time = 2.0
 one_shot = true
 
+[node name="AlertTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("7_5n824")
 
 [node name="TextEdit" type="Label" parent="."]
+visible = false
 offset_left = -29.0
 offset_top = 1.0
 offset_right = 32.0
@@ -90,5 +95,6 @@ text = "PATROL"
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="TriggerTimer" to="." method="_on_trigger_timer_timeout"]
 [connection signal="timeout" from="WatchTimer" to="." method="_on_watch_timer_timeout"]
+[connection signal="timeout" from="AlertTimer" to="." method="_on_alert_timer_timeout"]
 
 [editable path="Gun"]

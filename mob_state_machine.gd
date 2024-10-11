@@ -1,6 +1,6 @@
 extends StateMachine
 
-enum State { GUARD, PATROL, RETURN, CHASE, WATCH, ATTACK, DEAD }
+enum State { GUARD, PATROL, RETURN, CHASE, WATCH, ATTACK, ALERT, DEAD }
 
 var last_player_position: Vector2 = Vector2.ZERO
 
@@ -11,6 +11,7 @@ func _ready():
 	add_state(State.RETURN)
 	add_state(State.WATCH)
 	add_state(State.ATTACK)
+	add_state(State.ALERT)
 	add_state(State.DEAD)
 
 
@@ -33,19 +34,23 @@ func _state_logic(_delta: float):
 		if parent.navigation_agent.is_navigation_finished():
 			parent.set_waypoint_iteratively()
 		
-		parent.move_to(parent.waypoints[parent.current_waypoint_index].global_position)
+		parent.move_to(parent.waypoints[parent.current_waypoint_index].global_position, false)
 
 	if current_state == State.CHASE:
-		parent.move_to(last_player_position)
+		parent.move_to(last_player_position, true)
 
 	if current_state == State.RETURN:
 		if parent.role == parent.Role.GUARD:
-			parent.move_to(parent.default_position)
+			parent.move_to(parent.default_position, false)
 		else:
-			parent.move_to(parent.waypoints[parent.current_waypoint_index].global_position)
+			parent.move_to(parent.waypoints[parent.current_waypoint_index].global_position, false)
 	
 	if current_state == State.ATTACK:
 		parent.rotate_to_player()
+	
+
+	if current_state == State.ALERT:
+		parent.look_at(parent.noise_origin)
 
 
 func _get_transition(_delta: float):
@@ -58,9 +63,13 @@ func _get_transition(_delta: float):
 		State.GUARD:
 			if parent.should_attack():
 				return State.ATTACK
+			elif parent.should_alert():
+				return State.ALERT
 		State.PATROL:
 			if parent.should_attack():
 				return State.ATTACK
+			elif parent.should_alert():
+				return State.ALERT
 		State.RETURN:
 			if parent.should_patrol():
 				return State.PATROL
@@ -68,6 +77,8 @@ func _get_transition(_delta: float):
 				return State.GUARD
 			elif parent.should_attack():
 				return State.ATTACK
+			elif parent.should_alert():
+				return State.ALERT
 		State.CHASE:
 			if parent.should_return():
 				return State.RETURN
@@ -85,6 +96,11 @@ func _get_transition(_delta: float):
 				return State.WATCH
 			elif parent.should_chase():
 				return State.CHASE
+		State.ALERT:
+			if parent.should_return():
+				return State.RETURN
+			elif parent.should_attack():
+				return State.ATTACK
 
 
 func _enter_state(_old_state, new_state):
@@ -110,6 +126,8 @@ func _enter_state(_old_state, new_state):
 			parent.rotation = parent.default_rotation
 		State.RETURN:
 			play_animation_move()
+		State.ALERT:
+			play_animation_idle()
 
 
 func _exit_state(_old_state, _new_state):
@@ -118,6 +136,8 @@ func _exit_state(_old_state, _new_state):
 			parent.get_node("TriggerTimer").stop()
 		State.WATCH:
 			parent.has_finnished_watching = false
+		State.ALERT:
+			parent.has_finnished_alerting = false
 
 
 func play_animation_move():

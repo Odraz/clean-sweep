@@ -53,6 +53,8 @@ func _process(delta):
 
 	animate_legs()
 
+	make_noise()
+
 	update_crosshair(false)
 
 	if is_charging_grenade():
@@ -100,6 +102,7 @@ func _on_gun_reloaded():
 
 
 func _on_gun_shot() -> void:
+	SignalBus.noise_made.emit(global_position, 350)
 	gun_shot.emit()
 
 
@@ -228,6 +231,18 @@ func animate_legs():
 		$Audio/AudioFootsteps.stop()
 
 
+func make_noise():
+	if velocity.length() > 0 and $StepNoiseTimer.is_stopped():
+		$StepNoiseTimer.start()
+	elif velocity.length() == 0 and not $StepNoiseTimer.is_stopped():
+		$StepNoiseTimer.stop()
+	
+	if velocity.length() > SPEED_WALK:
+		$StepNoiseTimer.wait_time = 0.5
+	elif is_same(velocity.length(), SPEED_WALK):
+		$StepNoiseTimer.wait_time = 1
+
+
 func set_idle():
 	$AnimationBody.play("idle_" + GUN_ANIMATIONS[current_gun.type])
 
@@ -242,11 +257,29 @@ func set_state(new_state: PlayerState):
 func hit():
 	set_state(PlayerState.DEAD)
 
-	$AnimationBody.play("death")
 	$AnimationLegs.hide()
+	$AnimationBody.play("death")
+	$Audio/AudioDeath.play()
+	
 	$CollisionShape2D.disabled = true
 	$NavigationObstacle2D.avoidance_enabled = false
+	
 	$LightFieldOfView.hide()
 	$Audio/AudioFootsteps.stop()
-	$Audio/AudioDeath.play()
+	$StepNoiseTimer.stop()
+	
 	$DeathTimer.start()
+
+
+func _on_step_noise_timer_timeout():
+	var noise
+
+	if velocity.length() > SPEED_WALK:
+		noise = 250 
+	elif is_same(velocity.length(), SPEED_WALK):
+		noise = 150
+	else:
+		noise = 0
+
+	if noise > 0:
+		SignalBus.noise_made.emit(global_position, noise)

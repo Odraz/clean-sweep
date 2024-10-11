@@ -18,11 +18,13 @@ config/icon="res://icon.svg"
 [autoload]
 
 GunSettings="*res://gun_settings.gd"
+SignalBus="*res://signal_bus.gd"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1081
+window/size/mode=3
 
 [global_group]
 
