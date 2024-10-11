@@ -23,7 +23,6 @@ GunSettings="*res://gun_settings.gd"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1081
-window/size/mode=3
 
 [global_group]
 

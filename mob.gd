@@ -1,15 +1,25 @@
 extends CharacterBody2D
 
-enum State { patrolling, watching, chasing }
+enum Role { PATROL, GUARD }
+enum Behavior { PASSIVE, AGGRESSIVE }
 
-@export var movement_speed: float = 200.0
-@export var movement_target_positions: Array[Marker2D] = []
+const MOVEMENT_SPEED: float = 200.0
+const FOV_DOT_THRESHOLD: float = 0.5
+const FOV_DISTANCE: float = 500
+
+@export var role: Role
+@export var behavior: Behavior
+@export_range(1, 5) var skill_level: int
+@export var waypoints: Array[Node2D] = []
+
+var is_dead: bool = false
+var has_finnished_watching: bool = false
+var current_waypoint_index: int = 0
 
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var player: Node2D = get_parent().get_node("Player")
-
-var current_movement_target_index: int = 0
-var state: State = State.patrolling
+@onready var default_position: Vector2 = global_position
+@onready var default_rotation: float = rotation
 
 func _ready():
 	set_physics_process(false)
@@ -22,82 +32,36 @@ func _process(_delta: float):
 	$Gun.get_node("Target").global_position = player.global_position
 
 
+func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2):
+	velocity = safe_velocity
+
+
+func _on_trigger_timer_timeout():
+	$Gun.shoot(PI / 10)
+
+
+func _on_watch_timer_timeout():
+	has_finnished_watching = true
+
+
 func actor_setup():
 	# Wait for the first physics frame so the NavigationServer can sync.
 	await get_tree().physics_frame
 	set_physics_process(true)
-	
-	# Now that the navigation map is no longer empty, set the movement target.
-	if movement_target_positions.size() > 0:
-		set_movement_target(movement_target_positions[current_movement_target_index].global_position)
 
 
-func set_movement_target(movement_target: Vector2):
-	navigation_agent.target_position = movement_target
-
-
-func _physics_process(_delta):
-	if NavigationServer2D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
-		return
-
-	if is_player_in_light_of_sight():
-		rotation = global_position.direction_to(player.global_position).angle()
-
-		if state == State.patrolling or state == State.chasing:		
-			$TriggerTimer.start()
-
-		state = State.watching
-
-		$AnimatedSprite2D.play("idle")
-
-		# It would be cleaner to set the velocity to zero here, instead of returning.
-		return
-	elif state == State.watching:
-		set_movement_target(player.global_position)
-
-		state = State.chasing
-	else:
-		state = State.patrolling
-
-	$TriggerTimer.stop()
-
-	if movement_target_positions.size() == 0:
-		return
-
-	if navigation_agent.is_navigation_finished():
-		set_waypoint_randomly()
-
-		set_movement_target(movement_target_positions[current_movement_target_index].global_position)
-
-	var next_path_position: Vector2 = navigation_agent.get_next_path_position()
-
-	var new_velocity = global_position.direction_to(next_path_position) * movement_speed
-
-	# Face the direction of the next path position.
-	if velocity.length_squared() > 0:
-		rotation = velocity.angle()
-
-		$AnimatedSprite2D.play("move")
-
-	$NavigationAgent2D.set_velocity(new_velocity)
-
-	move_and_slide()
-
-
-func set_waypoint_randomly():
-	var random_index = randi() % movement_target_positions.size()
-
-	if random_index == current_movement_target_index:
-		current_movement_target_index = (random_index + 1) % movement_target_positions.size()
-	else:
-		current_movement_target_index = random_index
+func set_waypoint_iteratively():
+	current_waypoint_index += 1
+		
+	if current_waypoint_index >= waypoints.size():
+		current_waypoint_index = 0
 
 
 func is_player_in_light_of_sight() -> bool:
 	var direction_to_player = position.direction_to(player.position)
 	var front_facing_vector = transform.x.normalized()
 
-	if direction_to_player.dot(front_facing_vector) < 0.5 or position.distance_to(player.position) > 500:
+	if direction_to_player.dot(front_facing_vector) < FOV_DOT_THRESHOLD or position.distance_to(player.position) > FOV_DISTANCE:
 		return false
 
 	var space_state = get_world_2d().direct_space_state
@@ -111,13 +75,61 @@ func is_player_in_light_of_sight() -> bool:
 	return result.collider == player if result.has("collider") else false
 
 
-func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2):
-	velocity = safe_velocity
+func move_to(next_position: Vector2):
+	set_movement_target(next_position)
+
+	var next_path_position: Vector2 = navigation_agent.get_next_path_position()
+
+	var new_velocity = global_position.direction_to(next_path_position) * MOVEMENT_SPEED
+
+	# Face the direction of the next path position.
+	if velocity.length_squared() > 0:
+		rotation = velocity.angle()
+
+	get_node("NavigationAgent2D").set_velocity(new_velocity)
+
+	move_and_slide()
 
 
-func _on_trigger_timer_timeout():
-	$Gun.shoot(PI / 10)
+func set_movement_target(movement_target: Vector2):
+	navigation_agent.target_position = movement_target
+
+
+func rotate_to_player():
+	rotation = global_position.direction_to(player.global_position).angle()
+
+
+func is_alerted():
+	return false
 
 
 func hit():
-	queue_free()
+	is_dead = true
+
+
+func should_die():
+	return is_dead
+
+
+func should_attack():
+	return is_player_in_light_of_sight()
+
+
+func should_patrol():
+	return role == Role.PATROL and $WatchTimer.is_stopped() and (navigation_agent.is_navigation_finished() or has_finnished_watching)
+
+
+func should_guard():
+	return role == Role.GUARD and $WatchTimer.is_stopped() and (navigation_agent.is_navigation_finished() or has_finnished_watching)
+
+
+func should_chase():
+	return behavior == Behavior.AGGRESSIVE and (is_alerted() or not is_player_in_light_of_sight())
+	
+
+func should_watch():
+	return behavior == Behavior.PASSIVE and (is_alerted() or not is_player_in_light_of_sight())
+
+
+func should_return():
+	return $WatchTimer.is_stopped() and navigation_agent.is_navigation_finished()

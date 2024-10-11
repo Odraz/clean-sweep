@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dfi02hgcspv5o"]
+[gd_scene load_steps=11 format=3 uid="uid://dfi02hgcspv5o"]
 
 [ext_resource type="Script" path="res://mob.gd" id="1_85dvw"]
 [ext_resource type="Texture2D" uid="uid://dadl8sl0ceyop" path="res://art/mob_idle.png" id="2_f11ku"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://8heg8ep15o5d" path="res://gun.tscn" id="3_kwxxi"]
 [ext_resource type="Texture2D" uid="uid://c53etf8lpabq7" path="res://art/mob_run2.png" id="4_31nw5"]
 [ext_resource type="Texture2D" uid="uid://n103b405f6my" path="res://art/mob_run3.png" id="5_hg360"]
+[ext_resource type="Script" path="res://mob_state_machine.gd" id="7_5n824"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_rmulm"]
 light_mode = 2
@@ -72,7 +73,22 @@ position = Vector2(28, 0)
 [node name="TriggerTimer" type="Timer" parent="."]
 wait_time = 0.3
 
+[node name="WatchTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("7_5n824")
+
+[node name="TextEdit" type="Label" parent="."]
+offset_left = -29.0
+offset_top = 1.0
+offset_right = 32.0
+offset_bottom = 24.0
+text = "PATROL"
+
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="TriggerTimer" to="." method="_on_trigger_timer_timeout"]
+[connection signal="timeout" from="WatchTimer" to="." method="_on_watch_timer_timeout"]
 
 [editable path="Gun"]
