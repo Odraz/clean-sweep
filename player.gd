@@ -234,6 +234,7 @@ func animate_legs():
 func make_noise():
 	if velocity.length() > 0 and $StepNoiseTimer.is_stopped():
 		$StepNoiseTimer.start()
+		_on_step_noise_timer_timeout()
 	elif velocity.length() == 0 and not $StepNoiseTimer.is_stopped():
 		$StepNoiseTimer.stop()
 	
