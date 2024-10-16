@@ -1,5 +1,4 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-build/windows/
-build/web/serve.py
+build/
