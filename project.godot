@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="2D Top down shooter"
+config/name="Clean sweep"
 run/main_scene="res://main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"

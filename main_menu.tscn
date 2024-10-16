@@ -17,7 +17,7 @@ offset_top = 150.0
 offset_right = 330.0
 offset_bottom = 238.0
 grow_horizontal = 2
-text = "My Little Counter-Strike"
+text = "Clean sweep"
 label_settings = SubResource("LabelSettings_jucek")
 horizontal_alignment = 1
 
