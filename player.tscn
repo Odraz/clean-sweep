@@ -238,7 +238,7 @@ shape = SubResource("CapsuleShape2D_mtobe")
 
 [node name="LightFieldOfView" type="PointLight2D" parent="."]
 rotation = 1.5708
-energy = 0.5
+energy = 0.2
 shadow_enabled = true
 texture = ExtResource("3_wgl4p")
 offset = Vector2(0, -700)

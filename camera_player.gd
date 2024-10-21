@@ -16,6 +16,6 @@ func _process(delta: float):
 
 func calculate_camera_position():
 	var player_position = player.global_position if player else Vector2.ZERO
-	var mouse_position = get_global_mouse_position()
+	var mouse_position = player.get_node("Crosshair").global_position
 	
-	return player_position.lerp(mouse_position, 0.3)
+	return player_position.lerp(mouse_position, 0.4)

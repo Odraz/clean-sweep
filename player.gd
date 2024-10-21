@@ -30,6 +30,8 @@ const SPEED_RUN: float = 200
 const SPEED_AIM_MODIFIER: float = 0.5
 const FOOTSTEP_SPEED_MODIFIER: float = 1.5
 
+const CROSSHAIR_SPEED: float = 600
+
 var state: PlayerState = PlayerState.DEFAULT
 var grenades: int = GRENADE_COUNT
 var grenade_throw_force: int = GRENADE_THROW_FORCE_MIN
@@ -49,21 +51,23 @@ func _process(delta):
 	if is_dead():
 		return
 
-	look_at_mouse_position()
+	look_at_crosshair()
 
 	animate_legs()
 
 	make_noise()
+
+	move_crosshair(delta)
 
 	update_crosshair(false)
 
 	if is_charging_grenade():
 		grenade_throw_force = min(grenade_throw_force + GRENADE_THROW_FORCE_MAX / GRENADE_CHARGE_TIME * delta, GRENADE_THROW_FORCE_MAX)
 
-	current_gun.get_node("Target").global_position = get_global_mouse_position()
+	current_gun.get_node("Target").global_position = $Crosshair.global_position
 
 
-func _input(event):
+func _unhandled_input(event):
 	if is_dead():
 		return
 	
@@ -83,7 +87,6 @@ func _input(event):
 	elif is_charging_grenade():
 		if event.is_action_released("grenade_throw"):
 			init_throw_grenade()
-
 
 	update_crosshair(has_shot)
 
@@ -152,8 +155,14 @@ func calculate_velocity(input_velocity: Vector2, is_running: bool, is_aiming: bo
 		* (SPEED_AIM_MODIFIER if is_aiming else 1.0)
 
 
-func look_at_mouse_position():	
-	look_at(get_global_mouse_position())
+func look_at_crosshair():	
+	look_at($Crosshair.global_position)
+
+
+func move_crosshair(delta: float):
+	var crosshair_velocity = Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
+
+	get_viewport().warp_mouse(get_viewport().get_mouse_position() + crosshair_velocity * CROSSHAIR_SPEED * delta)
 
 
 func update_crosshair(has_shot: bool):
