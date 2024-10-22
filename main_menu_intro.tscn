@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://dxqovxiw5f0ej"]
 
-[ext_resource type="Script" path="res://main_menu.gd" id="1_gil7u"]
+[ext_resource type="Script" path="res://main_menu_intro.gd" id="1_ckl8y"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_jucek"]
 font_size = 64
 
-[node name="MainMenu" type="CanvasLayer"]
-script = ExtResource("1_gil7u")
+[node name="MainMenuIntro" type="CanvasLayer"]
+script = ExtResource("1_ckl8y")
 
 [node name="Label" type="Label" parent="."]
 anchors_preset = 5
